@@ -10,8 +10,9 @@ import java.util.concurrent.TimeUnit;
 //FCFS처리 -> 비선점형 순차적 처리
 public class FCFS {
 	private List<Process> readyQueue = new CopyOnWriteArrayList<>();	//순회 전용 카피 arraylist 안전함, 빠름
+	//read 역할만 하는 readyQueue
     private ExecutorService runningThread = Executors.newSingleThreadExecutor(); //스레드 생성 , singleThread : 작업을 예약한 순으로 처리
-    
+    //나중에 간트차트로 사용할 수 있을까?
     //프로세스 리스트 삽입
     void insert(ArrayList<Process> p) {
     	for(Process job : p)
@@ -31,7 +32,7 @@ public class FCFS {
     }
     
     void start() {
-        runningThread.execute(() -> {
+        runningThread.execute(() -> {//스레드를 실행하겠다.
             while (readyQueue.size() != 0) {
                 for (Process job : readyQueue) {
                     while (job.Service_time > 0) {
@@ -40,13 +41,13 @@ public class FCFS {
                         job.Service_time--;
  
                         if (job.Service_time == 0)
-                            readyQueue.removeIf(j -> j.Service_time == 0);	// 작업이 끝나면 삭제
+                            readyQueue.removeIf(j -> j.Service_time == 0);	// 작업이 끝나면 삭제. j는 객체를 의미?
                     }
                 }
             }
  
             runningThread.shutdownNow();
-            System.exit(0);
+            //System.exit(0);
         });
     }
    

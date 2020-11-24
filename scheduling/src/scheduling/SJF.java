@@ -49,7 +49,7 @@ public class SJF {
 	            }
 	 
 	            runningThread.shutdownNow();
-	            System.exit(0);
+	            //System.exit(0);
 	        });
 	    }
 	    

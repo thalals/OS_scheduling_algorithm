@@ -6,8 +6,8 @@ class Process{
 	String ID;		//프로세스 아이디
 	int Arrival_time;	//도착시간
 	int Service_time;	//서비스 시간
-	int Priority_Number;	//우선순위
-	int Time_quota; 		//시간 할당량 ( 타임 슬라이스 )
+	int Priority_Number;	//우선순위(수가 낮을수록 높음)
+	int Time_quota; 		//시간 할당량 ( 타임 슬라이스 ). 프로세스 별로 관리가 필요할까?
 }
 
 public class Main {
@@ -21,7 +21,7 @@ public class Main {
 		System.out.print("프로세스 수 : ");
 		int number = sc.nextInt();
 		
-		ArrayList<Process> process_list = new ArrayList<Process>();
+		ArrayList<Process> process_list = new ArrayList<Process>();//동적으로 할당되어지는 배열
 
 		for(int i=0;i<number; i++) {
 			Process process = new Process();
@@ -38,7 +38,7 @@ public class Main {
 			System.out.print("우선순위 : ");
 			process.Priority_Number = sc.nextInt();
 			
-			System.out.print("시간 할당량: ");
+			System.out.print("시간 할당량: ");//for문 밖으로 빼줘야 할 것 같다.
 			process.Time_quota = sc.nextInt();
 			
 			process_list.add(process);
@@ -51,10 +51,10 @@ public class Main {
 		}
 		
 		
-		FCFS f = new FCFS();
+		/*FCFS f = new FCFS();
 		System.out.println("FCFS 실행");
 		f.insert(process_list);
-		f.start();
+		f.start();*/
 		
 		SJF s = new SJF();
 		System.out.println("\nSJF 실행");
