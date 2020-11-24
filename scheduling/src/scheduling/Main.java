@@ -26,11 +26,11 @@ public class Main {
 		System.out.println("데이터 입력");
 		System.out.print("프로세스 수 : ");
 		//여기서 0나오면 메인에서 걸러야 함. 상정 안 하고 만듦
-		//int number = sc.nextInt();
+		int number = sc.nextInt();
 		
 		ArrayList<Process> process_list = new ArrayList<Process>();//동적으로 할당되어지는 배열
 
-		/*for(int i=0;i<number; i++) {
+		for(int i=0;i<number; i++) {
 			Process process = new Process();
 
 			System.out.print("프로세스ID : ");
@@ -51,10 +51,10 @@ public class Main {
 			process_list.add(process);
 			System.out.println("-------------------------------------");
 
-		}*/ //느려. 나중에
-		// 체크
+		} //느려. 나중에
+		// 아래는 체크용 코드
 		
-		Process process = new Process();
+		/*Process process = new Process();
 		process.ID="10";
 		process.Arrival_time=3;
 		process.Service_time=4;
@@ -68,7 +68,7 @@ public class Main {
 		process1.Service_time=5;
 		process1.Priority_Number=6;
 		process1.Time_quota=10;
-		process_list.add(process1);
+		process_list.add(process1);*/
 		
 		for(Process a : process_list) {
 			System.out.println("id : "+ a.ID);
