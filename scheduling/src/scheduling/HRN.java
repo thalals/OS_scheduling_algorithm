@@ -9,12 +9,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-class Result_list{
-	String process_name;
-	double Response_time=0;
-	double Wait_time =0;
-	double Return_time =0;
-}
 
 public class HRN {
 	private int timeLapse=0;	// 대기시간(총 프로세스가 돌아간 시간)
@@ -29,7 +23,6 @@ public class HRN {
 	private List<Process> readyQueue = new CopyOnWriteArrayList<>();
 	private List<Process> Queue = new CopyOnWriteArrayList<>(); //아직 레디큐에 도착하지 않은 프로세스 관리용 큐
 	
-	private List<Result_list> rs_time = new ArrayList<Result_list>();
 	
     void insert(ArrayList<Process> p) {
     	for(Process job : p) {
@@ -53,38 +46,6 @@ public class HRN {
         System.out.println("]");
     }
     
-    void start() {
-    	cpuCount=0;//대기 시간 체크+cpu 내 점유 시간 확인
-    	cpuUse=true;//QueueJob 부분 코드 이제 안 씀(아마)
-    	readyQueue.remove(0);//cpu에서 사용하는 프로세스는 레디큐에서 삭제
-    	
-//        runningThread.execute(() -> {
-            while (readyQueue.size() != 0) {
-                for (Process job : readyQueue) {
-                	while(job.Service_time > 0) {
-                		timeLapse++;	// 대기시간(총 Cpu 돌아가는 시간)
-                		log(job);
-                		sleep(1000);
-                		job.Service_time--;
-                	}            	
-                	if (job.Service_time == 0)
-                		readyQueue.removeIf(j -> j.Service_time == 0);
-                	
-                	//우선순위 계산
-                	for(Process a : readyQueue) {
-                		a.Priority_Number = (timeLapse-a.Arrival_time)+a.Service_time/a.Service_time;
-                	}
-                	
-                	//우선순위 정렬 내림차순
-                    readyQueue.sort(Comparator.comparingDouble(j -> j.Priority_Number));
-//                    Collections.reverse(readyQueue);
-                }
-            }
- 
-//            runningThread.shutdownNow();
-            //System.exit(0);
-//        });
-    }
     
     void start(Process p) {//사실 이부분이 cpu가 작동되는 함수 부분.
     	cpuCount=0;//대기 시간 체크+cpu 내 점유 시간 확인
@@ -107,9 +68,6 @@ public class HRN {
     			"/ 반환 시간: "+p.Return_time);
     	cpuUse=false;
        	
-       	Result_list rsList = new Result_list();
-       	rsList.process_name = p.ID;
-       	rsList.Wait_time = p.Wait_time;
        	ReadyQueueChange();
         	
     }
