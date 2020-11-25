@@ -9,28 +9,38 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+class Result_list{
+	String process_name;
+	double Response_time=0;
+	double Wait_time =0;
+	double Return_time =0;
+}
 
 public class HRN {
 	private int timeLapse=0;	// 대기시간(총 프로세스가 돌아간 시간)
+	private double avResponse=0;//첫 응답시간. 대화형 시스템에 중요하대.
 	private double avWait;//대기 시간. 모든 응답시간을 합한 시간.
 	private double avReturn;//반환 시간.
+	private int size;//처음 프로세스의 큐 사이즈를 알아야 평균값을 구함
 	private boolean cpuUse=false;
 	private int cpuCount;//cpu 점유 시간 카운트
 	
+	
 	private List<Process> readyQueue = new CopyOnWriteArrayList<>();
 	private List<Process> Queue = new CopyOnWriteArrayList<>(); //아직 레디큐에 도착하지 않은 프로세스 관리용 큐
-
-	private ExecutorService runningThread = Executors.newSingleThreadExecutor();
- 
-	//모든 프로세스
+	
+	private List<Result_list> rs_time = new ArrayList<Result_list>();
+	
     void insert(ArrayList<Process> p) {
-    	for(Process a : p) {
-    		a.Priority_Number = 0;		//우선순위 초기화 (입력될 필요 없음)
-    		Queue.add(a);
-    	}    	
-
+    	for(Process job : p) {
+    		job.Priority_Number = 0;		//우선순위 초기화 (입력될 필요 없음)
+    		Queue.add(job);
+    	}
+    	Queue.sort(Comparator.comparingInt(j -> j.Arrival_time));
+    	//도착 시간 관점에서는 도착이 늦을수록 레디큐에 늦게 적재됨
+    	size=Queue.size();
+    	QueueJob();//첫 시작에 cpu를 보는 게 아니라 큐의 상태를 보자
     }
- 
     void flowTime() {
     	sleep(990);
         // 오버헤드 고려해서 10msec 빠르게
@@ -43,7 +53,7 @@ public class HRN {
         System.out.println("]");
     }
     
-    void start(Process p) {
+    void start() {
     	cpuCount=0;//대기 시간 체크+cpu 내 점유 시간 확인
     	cpuUse=true;//QueueJob 부분 코드 이제 안 씀(아마)
     	readyQueue.remove(0);//cpu에서 사용하는 프로세스는 레디큐에서 삭제
@@ -67,7 +77,7 @@ public class HRN {
                 	
                 	//우선순위 정렬 내림차순
                     readyQueue.sort(Comparator.comparingDouble(j -> j.Priority_Number));
-                    Collections.reverse(readyQueue);
+//                    Collections.reverse(readyQueue);
                 }
             }
  
@@ -76,24 +86,79 @@ public class HRN {
 //        });
     }
     
-    void ReadyQueueChange() {//레디큐-cpu 사이 제어 함수
-    	if(cpuUse==false&&readyQueue.size()!=0)
+    void start(Process p) {//사실 이부분이 cpu가 작동되는 함수 부분.
+    	cpuCount=0;//대기 시간 체크+cpu 내 점유 시간 확인
+    	cpuUse=true;//QueueJob 부분 코드 이제 안 씀(아마)
+    	readyQueue.remove(0);//cpu에서 사용하는 프로세스는 레디큐에서 삭제
+    	
+        while(cpuCount!=p.Service_time) {//서비스 시간을 충족할 때까지 수행
+        	log(p);
+        	cpuCount++;
+       		timeLapse++;//1초 딸깍!
+    		ReadyQueueAdd();//대기큐의 대기시간 전부 1씩 증까
+        	QueueJob();
+       	}
+        p.Return_time=timeLapse-p.Arrival_time;//각 프로세스 반환 시간 도출
+    	avReturn+=(double)p.Return_time;//평균 반환 시간 도출을 위한 덧셈
+    	avResponse+=(double)p.Response_time;//평균 응답 시간 도출을 위한 덧셈
+    	avWait+=(double)p.Wait_time;//평균 대기 시간 도출을 위한 덧셈
+    	System.out.println(p.ID+" 프로세스 응답 시간: "+p.Response_time+
+    			"/ 대기 시간: "+p.Wait_time+
+    			"/ 반환 시간: "+p.Return_time);
+    	cpuUse=false;
+       	
+       	Result_list rsList = new Result_list();
+       	rsList.process_name = p.ID;
+       	rsList.Wait_time = p.Wait_time;
+       	ReadyQueueChange();
+        	
+    }
+    
+    //프로세스 대기시간 추가
+    void ReadyQueueAdd() {
+    	for(Process p : readyQueue) {
+    		p.Wait_time++;
+    	}
+    }
+
+    //레디큐-cpu 사이 제어 함수
+    void ReadyQueueChange() {
+    	
+    	//우선순위 정렬
+		for(Process a : readyQueue) {
+    		a.Priority_Number = (timeLapse-a.Arrival_time)+a.Service_time/a.Service_time;
+    	}
+		readyQueue.sort(Comparator.comparingDouble(j -> j.Priority_Number));
+        
+    	if(cpuUse==false&&readyQueue.size()!=0) {
+    		if(readyQueue.get(0).Response_time==-1)//해당 프로세스가 cpu에 처음 할당받는지
+
+    			readyQueue.get(0).Response_time=timeLapse-readyQueue.get(0).Arrival_time;
+    			//고러면 최초 응답시간을 만들어줘야죠
     		start(readyQueue.get(0));//start 함수는 인접한 레디큐 제어 함수에서만 관리하도록 한다.
+    	}
     	else
     		QueueJob();
     }
     
+    //가장 짧은 서비스시간을 가지는 프로세스의 인덱스를 찾아주는 함수
+    int GetPriIndex() {
+    	int minSize=0;
+    	for(int i=1;i<readyQueue.size();i++) {
+    		if(readyQueue.get(i).Priority_Number<readyQueue.get(minSize).Priority_Number)
+    			minSize=i;
+    	}
+    	return minSize;
+    }
+    
     void QueueJob() {//레디큐-준비큐 사이 제어 함수
-    	if(Queue.size()==0&&readyQueue.size()==0&&cpuUse==false) {
-    		System.exit(0);//다 비어있으면 종료
+    	if(Queue.size()==0&&readyQueue.size()==0&&cpuUse==false) {//다 비어있으면 평균값 출력 후 정상종료
+    		System.out.println("평균 응답 시간: "+(avResponse/size)+
+    				"/ 평균 대기 시간 "+(avWait/size)+
+    				"/ 평균 반환 시간 "+(avReturn/size));
+    		return;
     	}
     	if(Queue.size()!=0&&Queue.get(0).Arrival_time<=timeLapse) {//레디큐에 도착한 경우
-    		
-    		/*Queue.get(0).Response_time=timeLapse-Queue.get(0).Arrival_time;//현재 시간을 응답시간으로 포함
-    		avResponse+=Queue.get(0).Response_time;//평균 응답 시간 도출을 위한 덧셈
-    		Queue.get(0).Wait_time+=Queue.get(0).Response_time;//대기 시간에는 응답시간이 포함되어 있음
-    		위 세 줄은 어디에 넣어야 할지를 모르겠네. 연구가 필요해보인다.*/
-
     		readyQueue.add(Queue.get(0));
     		Queue.remove(0);
     		ReadyQueueChange();
