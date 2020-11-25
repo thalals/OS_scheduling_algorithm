@@ -75,18 +75,14 @@ public class Main {
 		}
 		
 		
-//		FCFS f = new FCFS();
-//		System.out.println("FCFS 角青");
-//		f.insert(process_list);
+		FCFS f = new FCFS();
+		System.out.println("FCFS 角青");
+		f.insert(process_list);
 		
 		/*SJF s = new SJF();
 		System.out.println("\nSJF 角青");
 		s.insert(process_list);
 		s.start();*/
-		
-		HRN h = new HRN();
-		System.out.println("\nHRN 角青");
-		h.insert(process_list);
 		
 	}
 	

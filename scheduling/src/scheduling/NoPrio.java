@@ -23,7 +23,7 @@ public class NoPrio {
     void insert(ArrayList<Process> p) {
     	for(Process job : p) {
     		job.Wait_time=0;
-    		job.Response_time=0;
+    		job.Response_time=-1;
     		job.Return_time=0;
     		Queue.add(job);
     	}
@@ -66,7 +66,7 @@ public class NoPrio {
         			"/ 대기 시간: "+p.Wait_time+
         			"/ 반환 시간: "+p.Return_time);
         	cpuUse=false;
-        	ReadyQueueChange();
+        	ReadyQueueChange(GetPriIndex());
         	//runningThread.shutdown();스레드 주석 처리
         //}); 스레드 주석 처리
     }
@@ -77,12 +77,12 @@ public class NoPrio {
     	}
     }
     
-    void ReadyQueueChange() {//레디큐-cpu 사이 제어 함수
+    void ReadyQueueChange(int index) {//레디큐-cpu 사이 제어 함수
     	if(cpuUse==false&&readyQueue.size()!=0) {
-    		if(readyQueue.get(0).Response_time==-1)//해당 프로세스가 cpu에 처음 할당받는지
-    			readyQueue.get(0).Response_time=timeLapse-readyQueue.get(0).Arrival_time;
+    		if(readyQueue.get(index).Response_time==-1)//해당 프로세스가 cpu에 처음 할당받는지
+    			readyQueue.get(index).Response_time=timeLapse-readyQueue.get(index).Arrival_time;
     			//고러면 최초 응답시간을 만들어줘야죠
-    		start(readyQueue.get(GetPriIndex()),GetPriIndex());//start 함수는 인접한 레디큐 제어 함수에서만 관리하도록 한다.
+    		start(readyQueue.get(index),index);//start 함수는 인접한 레디큐 제어 함수에서만 관리하도록 한다.
     	}
     	else
     		QueueJob();
@@ -107,7 +107,7 @@ public class NoPrio {
     	if(Queue.size()!=0&&Queue.get(0).Arrival_time<=timeLapse) {//레디큐에 도착한 경우
     		readyQueue.add(Queue.get(0));
     		Queue.remove(0);
-    		ReadyQueueChange();
+    		ReadyQueueChange(GetPriIndex());
     	}
     	else if(cpuUse==false){//레디큐에 오는 충분한 시간이 지나지 않았고 cpu가 사용중이지 않을 때. 완전 처음에만 적용
     		System.out.println(timeLapse+"s : "+"Nothing runs");

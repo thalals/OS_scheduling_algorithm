@@ -23,7 +23,7 @@ public class FCFS {
     void insert(ArrayList<Process> p) {
     	for(Process job : p) {
     		job.Wait_time=0;
-    		job.Response_time=0;
+    		job.Response_time=-1;
     		job.Return_time=0;
     		Queue.add(job);
     	}

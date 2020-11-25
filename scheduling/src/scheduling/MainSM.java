@@ -10,9 +10,9 @@ class Process{
 	int Arrival_time;	//도착시간
 	int Service_time;	//서비스 시간
 	int Priority_Number;	//우선순위(수가 낮을수록 높음)
-	int Wait_time=0; //각 프로세스 별 대기 시간
-	int Response_time=-1; //각 프로세스별 응답시간
-	int Return_time=0; //각 프로세스별 반환시간
+	int Wait_time; //각 프로세스 별 대기 시간
+	int Response_time; //각 프로세스별 응답시간
+	int Return_time; //각 프로세스별 반환시간
 }
 
 public class MainSM {
@@ -77,6 +77,9 @@ public class MainSM {
 			System.out.println("id : "+ a.ID);
 		}
 		
+		HRN h = new HRN();
+		System.out.println("HRN 실행");
+		h.insert(process_list);
 		
 		FCFS f = new FCFS();
 		System.out.println("FCFS 실행");
