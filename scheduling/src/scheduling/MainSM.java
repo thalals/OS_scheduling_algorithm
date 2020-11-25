@@ -13,6 +13,7 @@ class Process{
 	int Wait_time; //각 프로세스 별 대기 시간
 	int Response_time; //각 프로세스별 응답시간
 	int Return_time; //각 프로세스별 반환시간
+	int time_Remain; //선점형 전용. 남은 시간 측정기
 }
 
 public class MainSM {
@@ -26,8 +27,8 @@ public class MainSM {
 		System.out.print("프로세스 수 : ");
 		//여기서 0나오면 메인에서 걸러야 함. 상정 안 하고 만듦
 		int number = sc.nextInt();
-		System.out.print("시간 할당량: ");
-		int Time_qouta = sc.nextInt();*/
+		System.out.print("시간 할당량: ");*/
+		int Time_qouta = 3;
 		
 		ArrayList<Process> process_list = new ArrayList<Process>();//동적으로 할당되어지는 배열
 
@@ -77,12 +78,12 @@ public class MainSM {
 			System.out.println("id : "+ a.ID);
 		}
 		
-		HRN h = new HRN();
-		System.out.println("HRN 실행");
-		h.insert(process_list);
+		PrPrio pp = new PrPrio();
+		System.out.println("\n선점형 Priority 실행");
+		pp.insert(process_list);
 		
 		FCFS f = new FCFS();
-		System.out.println("FCFS 실행");
+		System.out.println("\nFCFS 실행");
 		f.insert(process_list);
 		
 		SJF s = new SJF();
@@ -92,6 +93,8 @@ public class MainSM {
 		NoPrio np = new NoPrio();
 		System.out.println("\n비선점형 Priority 실행");
 		np.insert(process_list);
+		
+
 	}
 	
 	
