@@ -25,7 +25,6 @@ public class RR {
 	private List<Process> readyQueue = new CopyOnWriteArrayList<>();
 	private List<Process> Queue = new CopyOnWriteArrayList<>(); //아직 레디큐에 도착하지 않은 프로세스 관리용 큐
 	
-	private List<Result_list> rs_time = new ArrayList<Result_list>();
 	
 	//insert
     void insert(ArrayList<Process> p, int timeslice) {
@@ -51,7 +50,7 @@ public class RR {
         System.out.print(timeLapse+"s : "+job.ID + " is running [");
         for(int i=0; i<readyQueue.size();i++)
         	System.out.print(readyQueue.get(i).ID+" ");
-        System.out.println("]");
+        System.out.println("] "+count);
     }
     
     //참조
@@ -66,10 +65,12 @@ public class RR {
     		ReadyQueueAdd();//대기큐의 대기시간 전부 1씩 증까
     		p.time_Remain--;
         	QueueJob();
+        	
        	}
-        
+        count++;
         if(p.time_Remain==0) {
-        	readyQueue.remove(count);
+        	readyQueue.remove(count-1);
+
 	        p.Return_time=timeLapse-p.Arrival_time;//각 프로세스 반환 시간 도출
 	    	avReturn+=(double)p.Return_time;//평균 반환 시간 도출을 위한 덧셈
 	    	avResponse+=(double)p.Response_time;//평균 응답 시간 도출을 위한 덧셈
@@ -78,7 +79,9 @@ public class RR {
 	    	System.out.println(p.ID+" 프로세스 응답 시간: "+p.Response_time+
 	    			"/ 대기 시간: "+p.Wait_time+
 	    			"/ 반환 시간: "+p.Return_time);
-	        
+	        count--;
+        	QueueJob();
+
         }
     	cpuUse=false;
        	ReadyQueueChange();
@@ -95,18 +98,18 @@ public class RR {
     
     //레디큐-cpu 사이 제어 함수
     void ReadyQueueChange() {
-        
+    	
+    	if(count>=readyQueue.size())
+			count=0;
+    	
     	if(cpuUse==false&&readyQueue.size()!=0) {
     		//해당 프로세스가 cpu에 처음 할당받는지
     		if(readyQueue.get(count).Response_time==-1){
+    			System.out.println(readyQueue.get(count).ID+"응답시간 체점");
     			readyQueue.get(count).Response_time=timeLapse-readyQueue.get(count).Arrival_time;	//고러면 최초 응답시간을 만들어줘야죠
+   
     		}
-    		//처음 할당 받는게 아닐 때
-    		else {
-    			count++;
-    			if(count>=readyQueue.size()-1)
-    				count=0;
-    		}
+    		
     		
     		start(readyQueue.get(count));//start 함수는 인접한 레디큐 제어 함수에서만 관리하도록 한다.		
     		

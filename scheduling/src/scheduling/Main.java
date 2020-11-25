@@ -83,6 +83,11 @@ public class Main {
 		Time_quota = 2;
 		r.insert(process_list, Time_quota);
 		
+		SRT rt = new SRT();
+		System.out.println("\nSRT  실행");
+		Time_quota = 2;
+		rt.insert(process_list, Time_quota);
+		
 		HRN h = new HRN();
 		System.out.println("\nHRN 실행");
 		h.insert(process_list);
