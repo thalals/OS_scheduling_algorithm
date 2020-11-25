@@ -9,7 +9,7 @@ class Process{
 	String ID;		//프로세스 아이디
 	int Arrival_time;	//도착시간
 	int Service_time;	//서비스 시간
-	int Priority_Number;	//우선순위(수가 낮을수록 높음)
+	double Priority_Number;	//우선순위(수가 낮을수록 높음)
 	int Time_quota; //시간 할당량 ( 타임 슬라이스 ). 프로세스 별로 타임 슬라이스 관리가 필요할까?
 	int Wait_time=0; //각 프로세스 별 대기 시간
 	int Response_time=-1; //각 프로세스별 응답시간
