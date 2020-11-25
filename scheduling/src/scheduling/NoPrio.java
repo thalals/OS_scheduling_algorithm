@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
-//FCFS처리 -> 비선점형 순차적 처리
-public class FCFS {
+//비선점 우선순위 처리
+public class NoPrio {
 	private int timeLapse=0;//총 시간 변수 추가로 시간 제어를 해보자.
 	private double avResponse=0;//첫 응답시간. 대화형 시스템에 중요하대.
 	private double avWait=0;//대기 시간. 모든 응답시간을 합한 시간.
@@ -78,11 +78,19 @@ public class FCFS {
     		if(readyQueue.get(0).Response_time==-1)//해당 프로세스가 cpu에 처음 할당받는지
     			readyQueue.get(0).Response_time=timeLapse-readyQueue.get(0).Arrival_time;
     			//고러면 최초 응답시간을 만들어줘야죠
-    		start(readyQueue.get(0));//start 함수는 인접한 레디큐 제어 함수에서만 관리하도록 한다.
+    		start(readyQueue.get(GetPriIndex()));//start 함수는 인접한 레디큐 제어 함수에서만 관리하도록 한다.
     	}
-    		
     	else
     		QueueJob();
+    }
+    
+    int GetPriIndex() {//가장 짧은 서비스시간을 가지는 프로세스의 인덱스를 찾아주는 함수
+    	int minSize=0;
+    	for(int i=1;i<readyQueue.size();i++) {
+    		if(readyQueue.get(i).Priority_Number<readyQueue.get(minSize).Priority_Number)
+    			minSize=i;
+    	}
+    	return minSize;
     }
     
     void QueueJob() {//레디큐-준비큐 사이 제어 함수
