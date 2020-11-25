@@ -21,8 +21,12 @@ public class FCFS {
     //나중에 간트차트로 사용할 수 있을까?
     //프로세스 리스트 삽입
     void insert(ArrayList<Process> p) {
-    	for(Process job : p)
+    	for(Process job : p) {
+    		job.Wait_time=0;
+    		job.Response_time=0;
+    		job.Return_time=0;
     		Queue.add(job);
+    	}
     	Queue.sort(Comparator.comparingInt(j -> j.Arrival_time));
     	//도착 시간 관점에서는 도착이 늦을수록 레디큐에 늦게 적재됨
     	size=Queue.size();
@@ -80,7 +84,6 @@ public class FCFS {
     			//고러면 최초 응답시간을 만들어줘야죠
     		start(readyQueue.get(0));//start 함수는 인접한 레디큐 제어 함수에서만 관리하도록 한다.
     	}
-    		
     	else
     		QueueJob();
     }

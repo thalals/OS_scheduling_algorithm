@@ -66,6 +66,13 @@ public class MainSM {
 		process1.Priority_Number=6;
 		process_list.add(process1);
 		
+		Process process2 = new Process();
+		process2.ID="hi";
+		process2.Arrival_time=5;
+		process2.Service_time=3;
+		process2.Priority_Number=2;
+		process_list.add(process2);
+		
 		for(Process a : process_list) {
 			System.out.println("id : "+ a.ID);
 		}

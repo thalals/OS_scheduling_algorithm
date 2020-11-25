@@ -21,8 +21,12 @@ public class SJF {
     //나중에 간트차트로 사용할 수 있을까?
     //프로세스 리스트 삽입
     void insert(ArrayList<Process> p) {
-    	for(Process job : p)
+    	for(Process job : p) {
+    		job.Wait_time=0;
+    		job.Response_time=0;
+    		job.Return_time=0;
     		Queue.add(job);
+    	}
     	Queue.sort(Comparator.comparingInt(j -> j.Arrival_time));
     	//도착 시간 관점에서는 도착이 늦을수록 레디큐에 늦게 적재됨
     	size=Queue.size();
@@ -42,10 +46,10 @@ public class SJF {
         System.out.println("]");
     }
     
-    void start(Process p) {//사실 이부분이 cpu가 작동되는 함수 부분.
+    void start(Process p, int index) {//사실 이부분이 cpu가 작동되는 함수 부분.
     	cpuCount=0;//대기 시간 체크+cpu 내 점유 시간 확인
     	cpuUse=true;//QueueJob 부분 코드 이제 안 씀(아마)
-    	readyQueue.remove(0);//cpu에서 사용하는 프로세스는 레디큐에서 삭제
+    	readyQueue.remove(index);//cpu에서 사용하는 프로세스는 레디큐에서 삭제.
         //runningThread.execute(() -> {//스레드를 실행하겠다.-주석처리.
         	while(cpuCount!=p.Service_time) {//서비스 시간을 충족할 때까지 수행
         		log(p);
@@ -78,7 +82,7 @@ public class SJF {
     		if(readyQueue.get(0).Response_time==-1)//해당 프로세스가 cpu에 처음 할당받는지
     			readyQueue.get(0).Response_time=timeLapse-readyQueue.get(0).Arrival_time;
     			//고러면 최초 응답시간을 만들어줘야죠
-    		start(readyQueue.get(GetSJFIndex()));//start 함수는 인접한 레디큐 제어 함수에서만 관리하도록 한다.
+    		start(readyQueue.get(GetSJFIndex()), GetSJFIndex());//start 함수는 인접한 레디큐 제어 함수에서만 관리하도록 한다.
     	}
     	else
     		QueueJob();
@@ -86,7 +90,7 @@ public class SJF {
     
     int GetSJFIndex() {//가장 짧은 서비스시간을 가지는 프로세스의 인덱스를 찾아주는 함수
     	int minSize=0;
-    	for(int i=1;i<readyQueue.size();i++) {
+    	for(int i=0;i<readyQueue.size();i++) {
     		if(readyQueue.get(i).Service_time<readyQueue.get(minSize).Service_time)
     			minSize=i;
     	}
