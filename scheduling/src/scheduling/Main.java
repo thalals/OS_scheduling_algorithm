@@ -79,6 +79,9 @@ public class Main {
 		for(Process a : process_list) {
 			System.out.println("id : "+ a.ID);
 		}
+		
+		
+		
 		Time_quota = 2;
 		RR r = new RR();
 		System.out.println("\n라운드 로빈 RR 실행");
@@ -91,6 +94,8 @@ public class Main {
 		SRT rt = new SRT();
 		System.out.println("\nSRT  실행");
 		rt.insert(process_list, Time_quota);
+
+		
 		
 		FCFS f = new FCFS();
 		System.out.println("\nFCFS 실행");
