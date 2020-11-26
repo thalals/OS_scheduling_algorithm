@@ -1,12 +1,9 @@
 package scheduling;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 
@@ -31,7 +28,9 @@ public class RR {
     	this.timeslice = timeslice;
     	
     	for(Process job : p) {
-    		job.Priority_Number = 0;		//우선순위 초기화 (입력될 필요 없음)
+    		job.Wait_time=0;
+    		job.Response_time=-1;
+    		job.Return_time=0;
     		job.time_Remain = job.Service_time;	// 선점형 전용 남은시간 계산하기 위해
     		Queue.add(job);
     	}

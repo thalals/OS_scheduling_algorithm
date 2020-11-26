@@ -10,10 +10,11 @@ class Process{
 	int Arrival_time;	//도착시간
 	int Service_time;	//서비스 시간
 	double Priority_Number;	//우선순위(수가 낮을수록 높음)
+	double HRN_Priority;//hrn 스케줄링 전용. 우선순위 측정기
 	int Wait_time=0; //각 프로세스 별 대기 시간
 	int Response_time=-1; //각 프로세스별 응답시간
 	int Return_time=0; //각 프로세스별 반환시간
-	int time_Remain=0; //선점형 전용. 남은 시간 측정기
+	int time_Remain=0;//선점형 전용. 남은 시간 측정기
 }
 
 public class Main {
@@ -78,19 +79,18 @@ public class Main {
 		for(Process a : process_list) {
 			System.out.println("id : "+ a.ID);
 		}
+		Time_quota = 2;
 		RR r = new RR();
 		System.out.println("\n라운드 로빈 RR 실행");
-		Time_quota = 2;
 		r.insert(process_list, Time_quota);
-		
-		SRT rt = new SRT();
-		System.out.println("\nSRT  실행");
-		Time_quota = 2;
-		rt.insert(process_list, Time_quota);
 		
 		HRN h = new HRN();
 		System.out.println("\nHRN 실행");
 		h.insert(process_list);
+		
+		SRT rt = new SRT();
+		System.out.println("\nSRT  실행");
+		rt.insert(process_list, Time_quota);
 		
 		FCFS f = new FCFS();
 		System.out.println("\nFCFS 실행");
@@ -104,7 +104,9 @@ public class Main {
 		System.out.println("\n비선점형 Priority 실행");
 		np.insert(process_list);
 		
+
 		
+		sc.close();
 		
 	}
 }

@@ -1,16 +1,13 @@
 package scheduling;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 
-public class HRN {
+public class HRN{
 	private int timeLapse=0;	// 대기시간(총 프로세스가 돌아간 시간)
 	private double avResponse=0;//첫 응답시간. 대화형 시스템에 중요하대.
 	private double avWait;//대기 시간. 모든 응답시간을 합한 시간.
@@ -26,7 +23,10 @@ public class HRN {
 	
     void insert(ArrayList<Process> p) {
     	for(Process job : p) {
-    		job.Priority_Number = 0;		//우선순위 초기화 (입력될 필요 없음)
+    		job.Wait_time=0;
+    		job.Response_time=-1;
+    		job.Return_time=0;
+    		job.HRN_Priority = 0;		//우선순위 초기화 (입력될 필요 없음)
     		Queue.add(job);
     	}
     	Queue.sort(Comparator.comparingInt(j -> j.Arrival_time));
@@ -84,9 +84,9 @@ public class HRN {
     	
     	//우선순위 정렬
 		for(Process a : readyQueue) {
-    		a.Priority_Number = (timeLapse-a.Arrival_time)+a.Service_time/a.Service_time;
+    		a.HRN_Priority = (timeLapse-a.Arrival_time)+a.Service_time/a.Service_time;
     	}
-		readyQueue.sort(Comparator.comparingDouble(j -> j.Priority_Number));
+		readyQueue.sort(Comparator.comparingDouble(j -> j.HRN_Priority));
         
     	if(cpuUse==false&&readyQueue.size()!=0) {
     		if(readyQueue.get(0).Response_time==-1)//해당 프로세스가 cpu에 처음 할당받는지
@@ -103,7 +103,7 @@ public class HRN {
     int GetPriIndex() {
     	int minSize=0;
     	for(int i=1;i<readyQueue.size();i++) {
-    		if(readyQueue.get(i).Priority_Number<readyQueue.get(minSize).Priority_Number)
+    		if(readyQueue.get(i).HRN_Priority<readyQueue.get(minSize).HRN_Priority)
     			minSize=i;
     	}
     	return minSize;

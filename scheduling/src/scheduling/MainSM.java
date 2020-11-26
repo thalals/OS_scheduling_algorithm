@@ -1,6 +1,6 @@
 //레디큐 하나로 아직 들어오지 않은 프로세스까지 관리할 수 있을까?
 //큐를 두 개 만들어서 진행 시간에 맞추어서 레디큐에 차곡차곡 넣어야 하지 않을까 하는 생각
-
+/*
 package scheduling;
 
 import java.util.*;
@@ -23,16 +23,16 @@ public class MainSM {
 	
 		Scanner sc = new Scanner(System.in);
 		
-		/*System.out.println("데이터 입력");
+		System.out.println("데이터 입력");
 		System.out.print("프로세스 수 : ");
 		//여기서 0나오면 메인에서 걸러야 함. 상정 안 하고 만듦
 		int number = sc.nextInt();
-		System.out.print("시간 할당량: ");*/
-		int Time_qouta = 3;
+		System.out.print("시간 할당량: ");
+		//int Time_qouta = 3;
 		
 		ArrayList<Process> process_list = new ArrayList<Process>();//동적으로 할당되어지는 배열
 
-		/*for(int i=0;i<number; i++) {
+		for(int i=0;i<number; i++) {
 			Process process = new Process();
 
 			System.out.print("프로세스ID : ");
@@ -50,7 +50,7 @@ public class MainSM {
 			process_list.add(process);
 			System.out.println("-------------------------------------");
 
-		} //느려. 나중에*/
+		} //느려. 나중에
 		
 		// 아래는 체크용 코드
 		Process process = new Process();
@@ -78,6 +78,17 @@ public class MainSM {
 			System.out.println("id : "+ a.ID);
 		}
 		
+		HRN hr = new HRN();
+		System.out.println("\nHRN 실행");
+		hr.insert(process_list);
+		RR rr = new RR();
+		System.out.println("\nRound Robin 실행");
+		rr.insert(process_list, 2);
+		
+		SRT srt = new SRT();
+		System.out.println("\nSRT 실행");
+		srt.insert(process_list, 2);
+		
 		PrPrio pp = new PrPrio();
 		System.out.println("\n선점형 Priority 실행");
 		pp.insert(process_list);
@@ -95,7 +106,9 @@ public class MainSM {
 		np.insert(process_list);
 		
 
+		
+		sc.close();
 	}
 	
 	
-}
+}*/
