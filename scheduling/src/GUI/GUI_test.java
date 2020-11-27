@@ -108,6 +108,8 @@ public class GUI_test extends JFrame {
 				//시작버튼 클릭 이벤트
 //				startButton.setVisible(false);
 //				Background = new ImageIcon(Gui_Main.class.getResource("../images/yellow_blank.png")).getImage();
+				
+				dispose();
 				new input_gui();
 			}
 		});
