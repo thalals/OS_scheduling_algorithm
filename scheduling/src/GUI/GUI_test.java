@@ -21,7 +21,7 @@ public class GUI_test extends JFrame {
 
 	//이미지를 담을 객체
 	//Main class의 위치를 기반으로 getResource의 경로를 가져와 해당 이미지를 가져옴
-	private Image introBackground = new ImageIcon(Gui_Main.class.getResource("../images/introBackground.PNG")).getImage();
+	private Image Background = new ImageIcon(Gui_Main.class.getResource("../images/introBackground.PNG")).getImage();
 
 	private ImageIcon exitButton = new ImageIcon(Gui_Main.class.getResource("../images/ExitButtonBasic.png"));
 	private ImageIcon startButtonImage = new ImageIcon(Gui_Main.class.getResource("../images/startButton.png"));
@@ -72,7 +72,7 @@ public class GUI_test extends JFrame {
 		add(exitMenubt);
 
 		//상단 메뉴바
-		menubar.setBounds(0, 0, 912, 30);
+		menubar.setBounds(0, 0, 912, 27);
 		menubar.addMouseListener(new MouseAdapter() {
 			//마우스 입력에서 마우스를 눌렀을때 이벤트 처리
 			@Override
@@ -106,6 +106,9 @@ public class GUI_test extends JFrame {
 			}
 			public void mousePressed(MouseEvent e) {
 				//시작버튼 클릭 이벤트
+//				startButton.setVisible(false);
+//				Background = new ImageIcon(Gui_Main.class.getResource("../images/yellow_blank.png")).getImage();
+				new input_gui();
 			}
 		});
 		
@@ -126,7 +129,7 @@ public class GUI_test extends JFrame {
 	}
 	
 	public void screenDraw(Graphics g) {
-		g.drawImage(introBackground, 0, 0, null);	//introBackground 이미지를 화면 전체에 그려줌
+		g.drawImage(Background, 0, 0, null);	//introBackground 이미지를 화면 전체에 그려줌
 		paintComponents(g);// 항상 고전된 버튼, 메뉴바 등을 구현할 때 사용
 		this.repaint();	//paint 함수를 계속 불러와 화면에 계속 그림
 	}
