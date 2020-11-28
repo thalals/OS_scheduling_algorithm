@@ -27,16 +27,16 @@ import org.jfree.ui.StandardGradientPaintTransformer;
 public class StackedGanttChart extends ApplicationFrame {
 	int size; //프로세스 개수
 	ArrayList<Integer> squen = new ArrayList<Integer>(); // 전체 프로세스 순서 정보-색 입혀야 됨
-	int countLapse=0;
+	int countLapse=0;//타임랩스마냥 전체 분할된 프로세스를 가지고 있는 카운트랩스 변수
 	int[] proCount;//각 큐별로 몇 개의 분할을 가지고 있는지 확인
-	Paint[] paint;
+	Paint[] paint;//페인트 색을 입히기 위해 사용하는 페인트 변수
 	//int countQueue=0;
 	static DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     public StackedGanttChart(final String title, int size) {
         super(title);
-        this.size=size;
+        this.size=size;//프로세스의 전체 수를 알아야 함
         proCount=new int[size+1];//0은 cpu, 다음부터 각 프로세스 대기큐 분할
-        paint = new Color[size+1];
+        paint = new Color[size+1];//마지막 값에 투명도 0인 층을 부여.
         
         //dataset.addValue(4, "CPU0", " ");
         //dataset.addValue(4, "0-0", " ");
@@ -62,7 +62,8 @@ public class StackedGanttChart extends ApplicationFrame {
         createDatasetComplete(2, 2);//
         createDatasetR_Ceady(3, 1);
         createDatasetComplete(1, 1);
-        
+        //제어가 정말 섬세하여야 작동되는 것을 확인. 코드 추가/작성에 유의하도록 한다.
+        //처음 CPU가 약간 유휴 상태인 경우의 코드도 작성해야 함
         /*createDatasetR_Ceady(0, 2);
         createDatasetReady(5, 2);
         createDatasetComplete(5, 1);
@@ -93,8 +94,14 @@ public class StackedGanttChart extends ApplicationFrame {
         result.addValue(1, "P5", " ");
         result.addValue(3, "P6", " ");
     }*/
+    //기본적으로 데이터셋에 큐 형식으로 하나씩 분할된 정보를 담는다.
+    //나중 그룹화를 위해 이름의 통일화는 필수, 어떤 색을 사용할지에 대한 인덱스도 설정하여야 함(나중에 알려줌)
+    //큐에서 임의로 설정한 이름 규칙을 이용하여 프로세스, CPU 별로 그룹화를 진행
+    //색상이 입혀지는 것은 프로세스 단위가 아니라 분할 단위. 분할된 프로세스 별 만든 색 정보를 이용하여 프로세스 별로 예쁘게 도식화
+    //->프로세스가 띄엄띄엄 있는 것 처럼 보이지만, 사실 그 사이에 안 보이는 투명한 분할 층이 있는 거다. 만드는데 죽는줄.
     public void createDatasetComplete(int lapse, int index) {//cpu에서 프로세스 끝남
     	dataset.addValue(lapse, "CPU"+String.valueOf(proCount[0]), " ");
+    	//CPU 기준으로 0부터 쌓이는 형식으로 만들어주기 위해 이름 제어
     	squen.add(index);
     	countLapse++;
     	proCount[0]++;
@@ -106,6 +113,7 @@ public class StackedGanttChart extends ApplicationFrame {
     	proCount[0]++;
     	
     	dataset.addValue(lapse, String.valueOf(index)+"-"+String.valueOf(proCount[index+1]), " ");//준비큐에 빈 공간 할당
+    	//첫 번째 프로세스 큐의 첫 번째 분할:0-0 / 두 번 째 분할:0-1 요런 식으로 저장됨
     	squen.add(size);//남은 공간 빈 색칠
     	countLapse++;
     	proCount[index+1]++;
@@ -116,23 +124,22 @@ public class StackedGanttChart extends ApplicationFrame {
     	countLapse++;
     	proCount[index+1]++;
     	
+    	//if(cpuUse==false)->cpu에서의 빈공간 적재 추가
     	//dataset.addValue(lapse, "CPU"+String.valueOf(proCount[0]), " ");
     	//squen.add(size);;//남은 cpu 공간 빈 색칠
     	//countLapse++;
     	//proCount[0]++;
     }
     public void createDatasetReady(int lapse, int index) {//큐에서 준비큐로
-    	//if(cpuUse==false)->cpu에서의 빈공간 적재 추가
     	dataset.addValue(lapse, String.valueOf(index)+"-"+String.valueOf(proCount[index+1]), " ");
     	squen.add(size);;
     	countLapse++;
     	proCount[index+1]++;
     }
 
-
     private JFreeChart createChart(final CategoryDataset dataset) {
 
-    for(int i=0;i<size;i++) {
+    for(int i=0;i<size;i++) {//랜덤으로 색을 만들어주는 코드
     		int x=(int)(Math.random()*255);
     		int y=(int)(Math.random()*255);
     		int z=(int)(Math.random()*255);
@@ -156,7 +163,8 @@ public class StackedGanttChart extends ApplicationFrame {
         
         GroupedStackedBarRenderer renderer = new GroupedStackedBarRenderer();
         KeyToGroupMap map = new KeyToGroupMap("G0");
-        for(int i=0;i<size+1;i++)//그룹화
+        for(int i=0;i<size+1;i++)//맞추어준 이름과 맞게 그룹화시켜주는 코드
+        	//CPU0~이 하나의 그룹화가 되고, 0-0~/1-0~느낌으로 하나의 그룹화가 되어야 한다.
         {
         	for(int i1=0;i1<proCount[i];i1++) {
         		if(i==0)
