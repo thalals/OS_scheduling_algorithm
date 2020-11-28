@@ -5,17 +5,17 @@ package scheduling;
 
 import java.util.*;
 
-class Process{
-	String ID;		//프로세스 아이디
-	int Arrival_time;	//도착시간
-	int Service_time;	//서비스 시간
-	double Priority_Number;	//우선순위(수가 낮을수록 높음)
-	double HRN_Priority;//hrn 스케줄링 전용. 우선순위 측정기
-	int Wait_time=0; //각 프로세스 별 대기 시간
-	int Response_time=-1; //각 프로세스별 응답시간
-	int Return_time=0; //각 프로세스별 반환시간
-	int time_Remain=0;//선점형 전용. 남은 시간 측정기
-}
+//class Process{
+//	String ID;		//프로세스 아이디
+//	int Arrival_time;	//도착시간
+//	int Service_time;	//서비스 시간
+//	double Priority_Number;	//우선순위(수가 낮을수록 높음)
+//	double HRN_Priority;//hrn 스케줄링 전용. 우선순위 측정기
+//	int Wait_time=0; //각 프로세스 별 대기 시간
+//	int Response_time=-1; //각 프로세스별 응답시간
+//	int Return_time=0; //각 프로세스별 반환시간
+//	int time_Remain=0;//선점형 전용. 남은 시간 측정기
+//}
 
 public class Main {
 	

@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -14,13 +15,18 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
+import scheduling.Process;
 
 public class input_gui extends JFrame {
 	
-	private Image background;
+	ArrayList<Process> gui_process_list = new ArrayList<Process>();	//프로세스 저장할 리스트
+	
     JScrollPane scrollPane;
-
-
+    public static int input_process_number=0;
+    
+    int count =0;	//프로세스 정보 입력 횟수 측정
 	ImageIcon icon;
 	
 	JFrame frame = new JFrame();
@@ -50,9 +56,7 @@ public class input_gui extends JFrame {
 	JTable table = new JTable(Contents,header);
 	
 	public input_gui(){
-//		frame.setLayout(null); 
-//		getContentPane().setLayout(null);
-		
+
 		//배경 불러오기
 		icon = new ImageIcon(Gui_Main.class.getResource("../images/yellow_blank.png"));
 		JPanel background_pannel = new JPanel() {        
@@ -130,8 +134,8 @@ public class input_gui extends JFrame {
 
         /*--------------------오른쪽 입력창 레이아웃 완료 ----------------------------*/
 		
-        JScrollPane scrollPane = new JScrollPane(table);
-        
+        // 왼쪽 표 레이아웃 설정 및 출력 부분
+        JScrollPane scrollPane = new JScrollPane(table);    
         
         table.setBounds(100, 150, 300, 300);
         scrollPane.setBounds(100, 150, 300, 240);
@@ -140,19 +144,84 @@ public class input_gui extends JFrame {
         
         frame.add(background_pannel);
 		
-
+        /*------------------------버튼 입력 액션 구현 ------------------------------------*/
+        
 		//프로세스 개수 입력했을 때
 		process_button.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				int process_number = Integer.parseInt(number_input.getText());
-				System.out.println(process_number);
-				number_input.disable();
-				
-				input_form();
-				
+				input_process_number = Integer.parseInt(number_input.getText());
+				System.out.println(input_process_number);
+				number_input.setEnabled(false);	//버튼 누르면 수정 못하게
 			}
 		});
+		
+		
+		//프로세스 정보 저장 버튼을 눌렀을때
+		save_button.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("프로세스 정보 저장 ");
+				Process process = new Process();
+				
+				//사용자가 입력한 정보 저장
+				process.setID(id_input.getText());
+				process.setService_time(Integer.parseInt(service_input.getText()));	
+				process.setArrival_time(Integer.parseInt(arrival_input.getText()));
+				process.setPriority_Number(Double.parseDouble(priority_input.getText()));
+				
+				gui_process_list.add(process);
+				
+				for(Process d : gui_process_list)
+					System.out.println(d.getID());
+				// 작성후 입력한 값 지우기
+				id_input.setText(null);
+				service_input.setText(null);
+				arrival_input.setText(null);
+				priority_input.setText(null);
+				
+				// 화면 테이블에 출력할 값 저장
+				table.setValueAt(process.getID(), count, 0);
+				table.setValueAt(Integer.toString(process.getArrival_time()), count, 1);
+				table.setValueAt(Integer.toString(process.getService_time()), count, 2);
+				table.setValueAt(Double.toString(process.getPriority_Number()), count, 3);
+
+				
+				count++;  //정보저장 횟수 카운트
+				
+				if(count == input_process_number) {
+					id_input.setEnabled(false);
+					service_input.setEnabled(false);
+					arrival_input.setEnabled(false);
+					priority_input.setEnabled(false);
+				}
+			}
+		});
+		
+		//초기화 버튼
+		reset_button.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				
+				count =0;
+				//리스트 안에 데이터 전부 지우기
+				gui_process_list.clear();
+				number_input.setEnabled(true);
+				
+				id_input.setEnabled(true);
+				service_input.setEnabled(true);
+				arrival_input.setEnabled(true);
+				priority_input.setEnabled(true);
+				
+				// 테이블 초기화
+				for(int i=0;i<table.getRowCount();i++) {
+					for(int j=0;j<table.getColumnCount();j++)
+						table.setValueAt(null, i, j);
+				}
+			}
+		});
+		
+		//다음 버튼
 		
 		
 		frame.setVisible(true);
@@ -167,36 +236,4 @@ public class input_gui extends JFrame {
 		
 	}
 	
-	public void input_form() {
-		JLabel process_id = new JLabel("프로세스 ID : ");
-		JLabel process_arrival = new JLabel("도착시간 : ");
-		JLabel process_service = new JLabel("서비스 시간 : ");
-		JLabel process_priority = new JLabel("우선순위 : ");
-
-		
-		JTextField id_input = new JTextField(15);	//텍스트 필드
-		JTextField arrival_input = new JTextField(15);	//텍스트 필드
-		JTextField service_input = new JTextField(15);	//텍스트 필드
-		JTextField priority_input = new JTextField(15);	//텍스트 필드
-		
-		//process id
-//		panel1.add(process_id);
-//		panel1.add(id_input);
-//		
-//		//process 도착시간
-//		panel2.add(process_arrival);
-//		panel2.add(arrival_input);
-//
-//		//process 서비스 시간
-//		panel3.add(process_service);
-//		panel3.add(service_input);
-//
-//		panel4.add(process_priority);
-//		panel4.add(priority_input);
-		
-//		frame.add(panel);
-		
-	}
-	
-
 }
