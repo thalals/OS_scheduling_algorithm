@@ -58,7 +58,7 @@ public class input_gui extends JFrame {
 	public input_gui(){
 
 		//배경 불러오기
-		icon = new ImageIcon(Gui_Main.class.getResource("../images/yellow_blank.png"));
+		icon = new ImageIcon("D:\\Study\\os_scheduling_algorithm\\scheduling\\src\\images\\yellow_blank.png");
 		JPanel background_pannel = new JPanel() {        
 			public void paintComponent(Graphics g) {
                 
