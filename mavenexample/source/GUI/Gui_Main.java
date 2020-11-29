@@ -2,8 +2,8 @@ package GUI;
 
 public class Gui_Main {
 	
-	public static final int SCREEEN_WIDTH = 912;	//Ã¢ ³Êºñ
-	public static final int SCREEEN_HEIGHT = 585;	//Ã¢ ³ôÀÌ
+	public static final int SCREEEN_WIDTH = 912;	//Ã¢ ï¿½Êºï¿½
+	public static final int SCREEEN_HEIGHT = 585;	//Ã¢ ï¿½ï¿½ï¿½ï¿½
 	public static void main(String[] args) {
 		new GUI_test();
 	}

@@ -222,7 +222,14 @@ public class input_gui extends JFrame {
 		});
 		
 		//다음 버튼
-		
+		next_button.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("다음");
+				frame.dispose();
+				new Gui_result(gui_process_list);
+			}
+		});
 		
 		frame.setVisible(true);
 		frame.setTitle("OS 스케줄링 입력창 ");
