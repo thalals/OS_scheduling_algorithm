@@ -65,4 +65,5 @@ public class Process {
 	int Return_time=0; //각 프로세스별 반환시간
 	int time_Remain=0;//선점형 전용. 남은 시간 측정기
 	int uID;//간트 차트 작성을 위한 프로세스 별 고유번호. 0부터 시작해야 함
+	int waiting;//프로세스가 대기큐에 얼마나 있었음
 }

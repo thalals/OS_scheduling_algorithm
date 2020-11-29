@@ -22,20 +22,23 @@ import org.jfree.ui.RefineryUtilities;
 import org.jfree.ui.StandardGradientPaintTransformer;
 
 
-public class StackedGanttChart extends ApplicationFrame {
+public class StackedGanttChart extends ApplicationFrame {//프레임 단위
 	int size; //프로세스 개수
 	ArrayList<Integer> squen = new ArrayList<Integer>(); // 전체 프로세스 순서 정보-색 입혀야 됨
 	int countLapse=0;//타임랩스마냥 전체 분할된 프로세스를 가지고 있는 카운트랩스 변수
 	int[] proCount;//각 큐별로 몇 개의 분할을 가지고 있는지 확인
 	Paint[] paint;//페인트 색을 입히기 위해 사용하는 페인트 변수
+	ChartPanel[] chartPanel = new ChartPanel[7];
 	//int countQueue=0;
-	DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+	DefaultCategoryDataset[] dataset = new DefaultCategoryDataset[7];
+
+	//ArrayList<DefaultCategoryDataset> dataset = new ArrayList<DefaultCategoryDataset>();
     public StackedGanttChart(int size) {
         super("OS scheduling");
         this.size=size;//프로세스의 전체 수를 알아야 함
         proCount=new int[size+1];//0은 cpu, 다음부터 각 프로세스 대기큐 분할
         paint = new Color[size+1];//마지막 값에 투명도 0인 층을 부여.
-        
+    	for(int i=0;i<dataset.length;i++) dataset[i]=new DefaultCategoryDataset();
         //dataset.addValue(4, "CPU0", " ");
         //dataset.addValue(4, "0-0", " ");
         //dataset.addValue(3, "0-1", " ");
@@ -47,19 +50,23 @@ public class StackedGanttChart extends ApplicationFrame {
         //createDatasetC_Ready(3, 0);
         //createDatasetR_Ceady(4, 0);
         
-        createDatasetReady(0, 0);
-        createDatasetR_Ceady(0, 0);
-        createDatasetReady(1, 2);//
-        createDatasetReady(2, 1);
-        createDatasetC_Ready(3, 0);
-        createDatasetR_Ceady(1, 1);
+    	/*createDatasetCPUnot(1, 3);
+        createDatasetReady(1, 0, 3);
+        createDatasetR_Ceady(0, 0, 3);
+        createDatasetReady(2, 1, 3);//
+        createDatasetC_Ready(1, 0, 3);
+        createDatasetR_Ceady(0, 1, 3);
+        createDatasetComplete(5, 1, 3);
+        createDatasetR_Ceady(5, 0, 3);
+        createDatasetComplete(3, 0, 3);
+        p1,p2용 순서*/
+        
+        /*createDatasetReady(2, 1);
         createDatasetC_Ready(3, 1);
-        createDatasetR_Ceady(3, 0);
-        createDatasetComplete(1, 0);
-        createDatasetR_Ceady(6, 2);//
-        createDatasetComplete(2, 2);//
+        createDatasetR_Ceady(6, 2);
         createDatasetR_Ceady(3, 1);
-        createDatasetComplete(1, 1);
+        createDatasetComplete(1, 1);*/
+
         //제어가 정말 섬세하여야 작동되는 것을 확인. 코드 추가/작성에 유의하도록 한다.
         //처음 CPU가 약간 유휴 상태인 경우의 코드도 작성해야 함
         /*createDatasetR_Ceady(0, 2);
@@ -68,10 +75,22 @@ public class StackedGanttChart extends ApplicationFrame {
         
         createDatasetR_Ceady(4, 2);
         createDatasetComplete(3, 2);*/
-        final JFreeChart chart = createChart(dataset);
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(912, 585));
-        setContentPane(chartPanel);
+    }
+    void insert(int datanum, ArrayList<Process> p) {
+        JFreeChart chart = createChart(dataset[datanum], p);
+        chartPanel[datanum] = new ChartPanel(chart);//패널의 생성
+        chartPanel[datanum].setPreferredSize(new java.awt.Dimension(912, 585));
+        //setContentPane(chartPanel[datanum]);
+        setContentPane(chartPanel[datanum]);
+        for(int i=0;i<proCount.length;i++) {
+        	proCount[i]=0;
+        }
+        countLapse=0;
+        squen.clear();
+    }
+    
+    void ChangeContent(int datanum) {
+    	setContentPane(chartPanel[datanum]);
     }
     
     /*private void createDataset() {
@@ -97,27 +116,27 @@ public class StackedGanttChart extends ApplicationFrame {
     //큐에서 임의로 설정한 이름 규칙을 이용하여 프로세스, CPU 별로 그룹화를 진행
     //색상이 입혀지는 것은 프로세스 단위가 아니라 분할 단위. 분할된 프로세스 별 만든 색 정보를 이용하여 프로세스 별로 예쁘게 도식화
     //->프로세스가 띄엄띄엄 있는 것 처럼 보이지만, 사실 그 사이에 안 보이는 투명한 분할 층이 있는 거다. 만드는데 죽는줄.
-    public void createDatasetComplete(int lapse, int index) {//cpu에서 프로세스 끝남
-    	dataset.addValue(lapse, "CPU"+String.valueOf(proCount[0]), " ");
+    public void createDatasetComplete(int lapse, int index, int datanum) {//cpu에서 프로세스 끝남
+    	dataset[datanum].addValue(lapse, "CPU"+String.valueOf(proCount[0]), " ");
     	//CPU 기준으로 0부터 쌓이는 형식으로 만들어주기 위해 이름 제어
     	squen.add(index);
     	countLapse++;
     	proCount[0]++;
     }
-    public void createDatasetC_Ready(int lapse, int index) {//cpu에서 준비큐로
-    	dataset.addValue(lapse, "CPU"+String.valueOf(proCount[0]), " ");//cpu에 할당
+    public void createDatasetC_Ready(int lapse, int index, int datanum) {//cpu에서 준비큐로
+    	dataset[datanum].addValue(lapse, "CPU"+String.valueOf(proCount[0]), " ");//cpu에 할당
     	squen.add(index);
     	countLapse++;
     	proCount[0]++;
     	
-    	dataset.addValue(lapse, String.valueOf(index)+"-"+String.valueOf(proCount[index+1]), " ");//준비큐에 빈 공간 할당
+    	dataset[datanum].addValue(lapse, String.valueOf(index)+"-"+String.valueOf(proCount[index+1]), " ");//준비큐에 빈 공간 할당
     	//첫 번째 프로세스 큐의 첫 번째 분할:0-0 / 두 번 째 분할:0-1 요런 식으로 저장됨
     	squen.add(size);//남은 공간 빈 색칠
     	countLapse++;
     	proCount[index+1]++;
     }
-    public void createDatasetR_Ceady(int lapse, int index) {//준비큐에서 cpu로
-    	dataset.addValue(lapse, String.valueOf(index)+"-"+String.valueOf(proCount[index+1]), " ");
+    public void createDatasetR_Ceady(int lapse, int index, int datanum) {//준비큐에서 cpu로
+    	dataset[datanum].addValue(lapse, String.valueOf(index)+"-"+String.valueOf(proCount[index+1]), " ");
     	squen.add(index);;
     	countLapse++;
     	proCount[index+1]++;
@@ -128,14 +147,20 @@ public class StackedGanttChart extends ApplicationFrame {
     	//countLapse++;
     	//proCount[0]++;
     }
-    public void createDatasetReady(int lapse, int index) {//큐에서 준비큐로
-    	dataset.addValue(lapse, String.valueOf(index)+"-"+String.valueOf(proCount[index+1]), " ");
+    public void createDatasetReady(int lapse, int index, int datanum) {//큐에서 준비큐로
+    	dataset[datanum].addValue(lapse, String.valueOf(index)+"-"+String.valueOf(proCount[index+1]), " ");
     	squen.add(size);;
     	countLapse++;
     	proCount[index+1]++;
     }
+    public void createDatasetCPUnot(int lapse, int datanum) {//큐에서 준비큐로
+    	dataset[datanum].addValue(lapse, "CPU"+String.valueOf(proCount[0]), " ");
+    	squen.add(size);;//남은 cpu 공간 빈 색칠
+    	countLapse++;
+    	proCount[0]++;
+    }
 
-    private JFreeChart createChart(final CategoryDataset dataset) {
+    public JFreeChart createChart(final CategoryDataset dataset, ArrayList<Process> p) {
 
     for(int i=0;i<size;i++) {//랜덤으로 색을 만들어주는 코드
     		int x=(int)(Math.random()*255);
@@ -242,15 +267,15 @@ public class StackedGanttChart extends ApplicationFrame {
         plot.setDomainAxis(domainAxis);
         //plot.setDomainAxisLocation(AxisLocation.TOP_OR_RIGHT);
         plot.setRenderer(renderer);
-        plot.setFixedLegendItems(createLegendItems());
+        plot.setFixedLegendItems(createLegendItems(p));
         return chart;
         
     }
 
-    private LegendItemCollection createLegendItems() {//서브 창에 색칠
+    public LegendItemCollection createLegendItems(ArrayList<Process> p) {//서브 창에 색칠
         LegendItemCollection result = new LegendItemCollection();
         for(int i=0;i<size;i++) {
-        	LegendItem item = new LegendItem("P"+String.valueOf(i+1), paint[i]);
+        	LegendItem item = new LegendItem(p.get(i).ID, paint[i]);
         	result.add(item);
         }
         /*LegendItem item1 = new LegendItem("P1", new Color(0x22, 0x22, 0xFF));
@@ -264,11 +289,9 @@ public class StackedGanttChart extends ApplicationFrame {
     
 
     public static void main(final String[] args) {
-        final StackedGanttChart demo = new StackedGanttChart(3);
-        demo.pack();
-        RefineryUtilities.centerFrameOnScreen(demo);
-        demo.setVisible(true);
-        demo.setResizable(false);
+        //final StackedGanttChart demo = new StackedGanttChart(2);
+        //demo.insert(0);
+
     }
 
 }

@@ -5,6 +5,8 @@ package scheduling;
 
 import java.util.*;
 
+import org.jfree.ui.RefineryUtilities;
+
 //class Process{
 //	String ID;		//프로세스 아이디
 //	int Arrival_time;	//도착시간
@@ -57,22 +59,22 @@ public class Main {
 		
 		Process process = new Process();
 		process.ID="hsm";
-		process.Arrival_time=3;
+		process.Arrival_time=1;
 		process.Service_time=4;
 		process.Priority_Number=5;
 		process_list.add(process);
 		
 		Process process1 = new Process();
 		process1.ID="phm";
-		process1.Arrival_time=4;
+		process1.Arrival_time=2;
 		process1.Service_time=5;
-		process1.Priority_Number=6;
+		process1.Priority_Number=4;
 		process_list.add(process1);
 		
 		Process process2 = new Process();
 		process2.ID="hi";
-		process2.Arrival_time=5;
-		process2.Service_time=3;
+		process2.Arrival_time=3;
+		process2.Service_time=2;
 		process2.Priority_Number=2;
 		process_list.add(process2);
 		
@@ -81,36 +83,49 @@ public class Main {
 		}
 		
 		
+		StackedGanttChart demo = new StackedGanttChart(process_list.size());
+		FCFS f = new FCFS();
+		System.out.println("\nFCFS 실행");
+		f.insert(process_list, demo);
+		demo.insert(0, process_list);
+		//demo.setVisible(true);
+		
+		SJF s = new SJF();
+		System.out.println("\nSJF 실행");
+		s.insert(process_list, demo);
+		demo.insert(1, process_list);
+		
+		NoPrio np = new NoPrio();
+		System.out.println("\n비선점형 Priority 실행");
+		np.insert(process_list, demo);
+		demo.insert(2, process_list);
+		
+		PrPrio pp = new PrPrio();
+		System.out.println("\n선점형 Priority 실행");
+		pp.insert(process_list, demo);
+		demo.insert(3, process_list);
 		
 		Time_quota = 2;
 		RR r = new RR();
 		System.out.println("\n라운드 로빈 RR 실행");
-		r.insert(process_list, Time_quota);
-		
-		HRN h = new HRN();
-		System.out.println("\nHRN 실행");
-		h.insert(process_list);
+		r.insert(process_list, Time_quota, demo);
+		demo.insert(4, process_list);
 		
 		SRT rt = new SRT();
 		System.out.println("\nSRT  실행");
-		rt.insert(process_list, Time_quota);
-
+		rt.insert(process_list, Time_quota, demo);
+		demo.insert(5, process_list);
 		
+		HRN h = new HRN();
+		System.out.println("\nHRN 실행");
+		h.insert(process_list, demo);
+		demo.insert(6, process_list);
 		
-		FCFS f = new FCFS();
-		System.out.println("\nFCFS 실행");
-		f.insert(process_list);
-		
-		SJF s = new SJF();
-		System.out.println("\nSJF 실행");
-		s.insert(process_list);
-		
-		NoPrio np = new NoPrio();
-		System.out.println("\n비선점형 Priority 실행");
-		np.insert(process_list);
-		
-
-		
+        
+        RefineryUtilities.centerFrameOnScreen(demo);
+        demo.pack();
+        demo.setResizable(false);
+        demo.setVisible(true);
 		sc.close();
 		
 	}
