@@ -57,12 +57,12 @@ public class Main {
 //		} //느려. 나중에
 		// 아래는 체크용 코드
 		
-		Process process = new Process();
+		/*Process process = new Process();
 		process.ID="hsm";
 		process.Arrival_time=1;
 		process.Service_time=4;
 		process.Priority_Number=5;
-		process_list.add(process);
+		process_list.add(process);*/
 		
 		Process process1 = new Process();
 		process1.ID="phm";
@@ -71,12 +71,12 @@ public class Main {
 		process1.Priority_Number=4;
 		process_list.add(process1);
 		
-		Process process2 = new Process();
+		/*Process process2 = new Process();
 		process2.ID="hi";
 		process2.Arrival_time=3;
 		process2.Service_time=2;
 		process2.Priority_Number=2;
-		process_list.add(process2);
+		process_list.add(process2);*/
 		
 		for(Process a : process_list) {
 			System.out.println("id : "+ a.ID);
@@ -84,7 +84,7 @@ public class Main {
 		
 		
 		StackedGanttChart demo = new StackedGanttChart(process_list.size());
-		FCFS f = new FCFS();
+		/*FCFS f = new FCFS();
 		System.out.println("\nFCFS 실행");
 		f.insert(process_list, demo);
 		demo.insert(0, process_list);
@@ -104,13 +104,7 @@ public class Main {
 		System.out.println("\n선점형 Priority 실행");
 		pp.insert(process_list, demo);
 		demo.insert(3, process_list);
-		
-		Time_quota = 2;
-		RR r = new RR();
-		System.out.println("\n라운드 로빈 RR 실행");
-		r.insert(process_list, Time_quota, demo);
-		demo.insert(4, process_list);
-		
+
 		SRT rt = new SRT();
 		System.out.println("\nSRT  실행");
 		rt.insert(process_list, Time_quota, demo);
@@ -119,8 +113,13 @@ public class Main {
 		HRN h = new HRN();
 		System.out.println("\nHRN 실행");
 		h.insert(process_list, demo);
-		demo.insert(6, process_list);
+		demo.insert(6, process_list);*/
 		
+		Time_quota = 2;
+		RR r = new RR();
+		System.out.println("\n라운드 로빈 RR 실행");
+		r.insert(process_list, Time_quota, demo);
+		demo.insert(4, process_list);
         
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.pack();

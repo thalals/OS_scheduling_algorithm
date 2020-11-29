@@ -3,6 +3,7 @@ package scheduling;
 import java.awt.Color;
 import java.awt.Paint;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import javax.swing.JPanel;
 
@@ -277,6 +278,7 @@ public class StackedGanttChart extends ApplicationFrame {//프레임 단위
 
     public LegendItemCollection createLegendItems(ArrayList<Process> p) {//서브 창에 색칠
         LegendItemCollection result = new LegendItemCollection();
+        p.sort(Comparator.comparingInt(j -> j.Arrival_time));
         for(int i=0;i<size;i++) {
         	LegendItem item = new LegendItem(p.get(i).ID, paint[i]);
         	result.add(item);

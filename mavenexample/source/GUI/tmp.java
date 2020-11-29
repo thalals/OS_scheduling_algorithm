@@ -13,7 +13,7 @@ import javax.swing.JTable;
 
 import scheduling.Process;
 
-public class Gui_result extends JFrame{
+public class tmp extends JFrame{
 
 	 ImageIcon icon;
 
@@ -21,7 +21,7 @@ public class Gui_result extends JFrame{
 	 private JPanel background_pannel_1;
 	 private JTable table;
 	
-	Gui_result(ArrayList<Process> list){
+	tmp(ArrayList<Process> list){
 		// 배경 불러오기
 	      icon = new ImageIcon(Gui_Main.class.getResource("../images/Back.png"));
 	      frame.getContentPane().setLayout(null);

@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -178,7 +179,7 @@ public class Gui_result extends JFrame {
 	      background_pannel.add(panel);
 	      
 	      ArrayList<Process> process_list = list;	// 입력받은 리스트 받아오기
-	      
+	      process_list.sort(Comparator.comparingInt(j -> j.getArrival_time()));
 	      
 	      for(int i =0; i<process_list.size();i++) {
 		      table.setValueAt(process_list.get(i).getID(), i, 0);
