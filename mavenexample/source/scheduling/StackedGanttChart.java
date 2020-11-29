@@ -1,6 +1,4 @@
-
-
-
+package scheduling;
 
 import java.awt.Color;
 import java.awt.Paint;
@@ -31,9 +29,9 @@ public class StackedGanttChart extends ApplicationFrame {
 	int[] proCount;//각 큐별로 몇 개의 분할을 가지고 있는지 확인
 	Paint[] paint;//페인트 색을 입히기 위해 사용하는 페인트 변수
 	//int countQueue=0;
-	static DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-    public StackedGanttChart(final String title, int size) {
-        super(title);
+	DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    public StackedGanttChart(int size) {
+        super("OS scheduling");
         this.size=size;//프로세스의 전체 수를 알아야 함
         proCount=new int[size+1];//0은 cpu, 다음부터 각 프로세스 대기큐 분할
         paint = new Color[size+1];//마지막 값에 투명도 0인 층을 부여.
@@ -266,7 +264,7 @@ public class StackedGanttChart extends ApplicationFrame {
     
 
     public static void main(final String[] args) {
-        final StackedGanttChart demo = new StackedGanttChart("OS scheduling", 3);
+        final StackedGanttChart demo = new StackedGanttChart(3);
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);
