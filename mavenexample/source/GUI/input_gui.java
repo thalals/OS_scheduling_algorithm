@@ -48,9 +48,7 @@ public class input_gui extends JFrame {
 			{ null, null, null, null },
 			{ null, null, null, null },
 			{ null, null, null, null },
-			{ null, null, null, null },
-			{ null, null, null, null },
-			{ null, null, null, null },
+			
 			};
 	
 	JTable table = new JTable(Contents,header);
@@ -137,8 +135,8 @@ public class input_gui extends JFrame {
         // 왼쪽 표 레이아웃 설정 및 출력 부분
         JScrollPane scrollPane = new JScrollPane(table);    
         
-        table.setBounds(100, 150, 300, 300);
-        scrollPane.setBounds(100, 150, 300, 240);
+        table.setBounds(100, 150, 300, 200);
+        scrollPane.setBounds(100, 150, 300, 185);
 
         background_pannel.add(scrollPane);
         
