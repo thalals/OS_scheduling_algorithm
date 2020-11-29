@@ -97,6 +97,8 @@ public class SJF {
     	for(int i=0;i<readyQueue.size();i++) {
     		if(readyQueue.get(i).Service_time<readyQueue.get(minSize).Service_time)
     			minSize=i;
+    		else if(readyQueue.get(i).time_Remain==readyQueue.get(minSize).time_Remain)
+    			continue;
     	}
     	return minSize;
     }
