@@ -21,7 +21,7 @@ public class GUI_test extends JFrame {
 
 	//이미지를 담을 객체
 	//Main class의 위치를 기반으로 getResource의 경로를 가져와 해당 이미지를 가져옴
-	private Image Background = new ImageIcon("../images/introBackground.PNG").getImage();
+	private Image Background = new ImageIcon("D:\\Study\\os_scheduling_algorithm\\scheduling\\src\\images\\introBackground.PNG").getImage();
 
 	private ImageIcon exitButton = new ImageIcon("../images/ExitButtonBasic.png");
 	private ImageIcon startButtonImage = new ImageIcon("../images/startButton.png");
