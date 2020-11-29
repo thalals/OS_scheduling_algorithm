@@ -76,7 +76,7 @@ public class StackedGanttChart extends ApplicationFrame {//프레임 단위
         createDatasetR_Ceady(4, 2);
         createDatasetComplete(3, 2);*/
     }
-    void insert(int datanum, ArrayList<Process> p) {
+    public void insert(int datanum, ArrayList<Process> p) {
         JFreeChart chart = createChart(dataset[datanum], p);
         chartPanel[datanum] = new ChartPanel(chart);//패널의 생성
         chartPanel[datanum].setPreferredSize(new java.awt.Dimension(912, 585));

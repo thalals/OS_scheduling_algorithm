@@ -21,7 +21,7 @@ public class RR {
 	private List<Process> Queue = new CopyOnWriteArrayList<>(); //아직 레디큐에 도착하지 않은 프로세스 관리용 큐
     //나중에 간트차트로 사용할 수 있을까?
     //프로세스 리스트 삽입
-    void insert(ArrayList<Process> p, int timeslice, StackedGanttChart demo) {
+    public void insert(ArrayList<Process> p, int timeslice, StackedGanttChart demo) {
     	for(Process job : p) {
     		job.Wait_time=0;
     		job.Response_time=-1;
@@ -137,6 +137,24 @@ public class RR {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    
+ public double get_avgResponse() {
+		
+    	return avResponse/size;
+    	
+    }
+    
+    public double get_avgWait() {
+		
+    	return avWait/size;
+    	
+    }
+    
+    public double get_avgReturn() {
+		
+    	return avReturn/size;
+    	
     }
 }
 
