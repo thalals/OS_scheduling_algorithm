@@ -59,7 +59,7 @@ public class Gui_result extends JFrame {
 	public Gui_result(ArrayList<Process> list){
 
 		//배경 불러오기
-		icon = new ImageIcon("D:\\Study\\os_scheduling_algorithm\\mavenexample\\source\\images\\yellow_blank.png");
+		icon = new ImageIcon("C:\\Users\\mitha\\eclipse-workspace\\mavenexample\\source\\images\\yellow_blank.PNG");
 		JPanel background_pannel = new JPanel() {        
 			public void paintComponent(Graphics g) {
                 
@@ -81,53 +81,53 @@ public class Gui_result extends JFrame {
 	    background_pannel.add(scrollPane);
         
 	    /*-------------------------버튼 위치-------------------------------------*/
-	    JLabel imgLabel = new JLabel(new ImageIcon("D:\\Study\\os_scheduling_algorithm\\mavenexample\\source\\images\\Button_Back.png"));
+	    JLabel imgLabel = new JLabel(new ImageIcon("C:\\Users\\mitha\\eclipse-workspace\\mavenexample\\source\\images\\Button_Back.png"));
 	      imgLabel.setBounds(10, 90, 585, 144);
 	      background_pannel.add(imgLabel);
 
-	      JButton FCFS = new JButton(new ImageIcon("D:\\Study\\os_scheduling_algorithm\\mavenexample\\source\\images\\FCFS.png"));
+	      JButton FCFS = new JButton(new ImageIcon("C:\\Users\\mitha\\eclipse-workspace\\mavenexample\\source\\images\\FCFS.png"));
 	      FCFS.setBorderPainted(false);
 	      FCFS.setFocusPainted(false);
 	      FCFS.setContentAreaFilled(false);
 	      imgLabel.add(FCFS);
 	      FCFS.setBounds(20, 25, 134, 42);
 
-	      JButton SJF = new JButton(new ImageIcon("D:\\Study\\os_scheduling_algorithm\\mavenexample\\source\\images\\SJF.png"));
+	      JButton SJF = new JButton(new ImageIcon("C:\\Users\\mitha\\eclipse-workspace\\mavenexample\\source\\images\\SJF.png"));
 	      SJF.setBorderPainted(false);
 	      SJF.setFocusPainted(false);
 	      SJF.setContentAreaFilled(false);
 	      imgLabel.add(SJF);
 	      SJF.setBounds(155, 25, 134, 42);
 
-	      JButton HRN = new JButton(new ImageIcon("D:\\Study\\os_scheduling_algorithm\\mavenexample\\source\\images\\HRW.png"));
+	      JButton HRN = new JButton(new ImageIcon("C:\\Users\\mitha\\eclipse-workspace\\mavenexample\\source\\images\\HRW.png"));
 	      HRN.setBorderPainted(false);
 	      HRN.setFocusPainted(false);
 	      HRN.setContentAreaFilled(false);
 	      imgLabel.add(HRN);
 	      HRN.setBounds(295, 25, 134, 42);
 
-	      JButton NoPrio = new JButton(new ImageIcon("D:\\Study\\os_scheduling_algorithm\\mavenexample\\source\\images\\NoPrio.png"));
+	      JButton NoPrio = new JButton(new ImageIcon("C:\\Users\\mitha\\eclipse-workspace\\mavenexample\\source\\images\\NoPrio.png"));
 	      NoPrio.setBorderPainted(false);
 	      NoPrio.setFocusPainted(false);
 	      NoPrio.setContentAreaFilled(false);
 	      imgLabel.add(NoPrio);
 	      NoPrio.setBounds(435, 25, 134, 42);
 	      
-	      JButton RR = new JButton(new ImageIcon("D:\\Study\\os_scheduling_algorithm\\mavenexample\\source\\images\\RR.png"));
+	      JButton RR = new JButton(new ImageIcon("C:\\Users\\mitha\\eclipse-workspace\\mavenexample\\source\\images\\RR.png"));
 	      RR.setBorderPainted(false);
 	      RR.setFocusPainted(false);
 	      RR.setContentAreaFilled(false);
 	      imgLabel.add(RR);
 	      RR.setBounds(80,75, 134, 42);
 	      
-	      JButton SRT = new JButton(new ImageIcon("D:\\Study\\os_scheduling_algorithm\\mavenexample\\source\\images\\SRT.png"));
+	      JButton SRT = new JButton(new ImageIcon("C:\\Users\\mitha\\eclipse-workspace\\mavenexample\\source\\images\\SRT.png"));
 	      SRT.setBorderPainted(false);
 	      SRT.setFocusPainted(false);
 	      SRT.setContentAreaFilled(false);
 	      imgLabel.add(SRT);
 	      SRT.setBounds(220,75, 134, 42);
 	      
-	      JButton Prio = new JButton(new ImageIcon("D:\\Study\\os_scheduling_algorithm\\mavenexample\\source\\images\\Prio.png"));
+	      JButton Prio = new JButton(new ImageIcon("C:\\Users\\mitha\\eclipse-workspace\\mavenexample\\source\\images\\Prio.png"));
 	      Prio.setBorderPainted(false);
 	      Prio.setFocusPainted(false);
 	      Prio.setContentAreaFilled(false);
@@ -221,7 +221,10 @@ public class Gui_result extends JFrame {
 					
 					scheduling.FCFS f = new FCFS();
 					f.insert(process_list, demo);
-					demo.insert(0, process_list);
+					panel.removeAll();
+					panel.add(demo.insert(0, process_list));
+					panel.revalidate();
+					panel.repaint();
 
 					for(int i =0; i<process_list.size();i++) {
 						
@@ -247,7 +250,10 @@ public class Gui_result extends JFrame {
 					
 					scheduling.SJF f = new SJF();
 					f.insert(process_list, demo);
-					demo.insert(1, process_list);
+					panel.removeAll();
+					panel.add(demo.insert(1, process_list));
+					panel.revalidate();
+					panel.repaint();
 
 					for(int i =0; i<process_list.size();i++) {
 						
@@ -274,7 +280,10 @@ public class Gui_result extends JFrame {
 					
 					scheduling.HRN f = new HRN();
 					f.insert(process_list, demo);
-					demo.insert(2, process_list);
+					panel.removeAll();
+					panel.add(demo.insert(6, process_list));
+					panel.revalidate();
+					panel.repaint();
 
 					for(int i =0; i<process_list.size();i++) {
 						
@@ -300,7 +309,10 @@ public class Gui_result extends JFrame {
 					
 					scheduling.RR f = new RR();
 					f.insert(process_list, time, demo);
-					demo.insert(3, process_list);
+					panel.removeAll();
+					panel.add(demo.insert(4, process_list));
+					panel.revalidate();
+					panel.repaint();
 
 					for(int i =0; i<process_list.size();i++) {
 						
@@ -327,7 +339,10 @@ public class Gui_result extends JFrame {
 					
 					scheduling.SRT f = new SRT();
 					f.insert(process_list, time, demo);
-					demo.insert(4, process_list);
+					panel.removeAll();
+					panel.add(demo.insert(5, process_list));
+					panel.revalidate();
+					panel.repaint();
 
 					for(int i =0; i<process_list.size();i++) {
 						
@@ -355,7 +370,10 @@ public class Gui_result extends JFrame {
 					
 					scheduling.NoPrio f = new NoPrio();
 					f.insert(process_list, demo);
-					demo.insert(5, process_list);
+					panel.removeAll();
+					panel.add(demo.insert(2, process_list));
+					panel.revalidate();
+					panel.repaint();
 
 					for(int i =0; i<process_list.size();i++) {
 						
@@ -382,7 +400,10 @@ public class Gui_result extends JFrame {
 					
 					scheduling.PrPrio f = new PrPrio();
 					f.insert(process_list, demo);
-					demo.insert(6, process_list);
+					panel.removeAll();
+					panel.add(demo.insert(3, process_list));
+					panel.revalidate();
+					panel.repaint();
 
 					for(int i =0; i<process_list.size();i++) {
 						

@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Paint;
 import java.util.ArrayList;
 
+import javax.swing.JPanel;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -76,17 +78,18 @@ public class StackedGanttChart extends ApplicationFrame {//프레임 단위
         createDatasetR_Ceady(4, 2);
         createDatasetComplete(3, 2);*/
     }
-    public void insert(int datanum, ArrayList<Process> p) {
+    public JPanel insert(int datanum, ArrayList<Process> p) {
         JFreeChart chart = createChart(dataset[datanum], p);
         chartPanel[datanum] = new ChartPanel(chart);//패널의 생성
-        chartPanel[datanum].setPreferredSize(new java.awt.Dimension(912, 585));
+        chartPanel[datanum].setPreferredSize(new java.awt.Dimension(960, 240));
         //setContentPane(chartPanel[datanum]);
-        setContentPane(chartPanel[datanum]);
+        //setContentPane(chartPanel[datanum]);
         for(int i=0;i<proCount.length;i++) {
         	proCount[i]=0;
         }
         countLapse=0;
         squen.clear();
+        return chartPanel[datanum];
     }
     
     void ChangeContent(int datanum) {
