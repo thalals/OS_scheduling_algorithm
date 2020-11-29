@@ -27,7 +27,7 @@ public class Gui_result extends JFrame {
 	
     JScrollPane scrollPane;
     public static int input_process_number=0;
-    
+    public static int time=0;	//시간 할당량
     int count =0;	//프로세스 정보 입력 횟수 측정
 	ImageIcon icon;
 	
@@ -137,30 +137,40 @@ public class Gui_result extends JFrame {
 	      JLabel avg_wait_label = new JLabel("평균 대기 시간 : ");
 	      JLabel avg_reponse_label = new JLabel("평균 응답 시간 : ");
 	      JLabel avg_return_label = new JLabel("평균 반환 시간 : ");
-	      
+	      JLabel time_quota_label = new JLabel("시간 할당량 : ");
+
 	      avg_wait_label.setBounds(155,250,100,20);
 	      avg_reponse_label.setBounds(155,280,100,20);
 	      avg_return_label.setBounds(155,310,100,20);
+	      time_quota_label.setBounds(455,310,100,20);
 	      
 	      JTextField avg_wait_txt = new JTextField();
 	      JTextField avg_reponse_txt = new JTextField();
 	      JTextField avg_return_txt = new JTextField();
-	      
+	      JTextField time_quota_txt = new JTextField();
+
 	      avg_wait_txt.setBounds(255,250,100,20);
 	      avg_reponse_txt.setBounds(255,280,100,20);
 	      avg_return_txt.setBounds(255,310,100,20);
+	      time_quota_txt.setBounds(555,310,100,20);
 	      
-	      avg_wait_txt.setEnabled(false);
-	      avg_reponse_txt.setEnabled(false);
-	      avg_return_txt.setEnabled(false);
+	      JButton time_save = new JButton("저장");
+	      time_save.setBounds(665, 310, 70, 20);
+	      background_pannel.add(time_save);
 	      
+	      JButton time_reset = new JButton("리셋");
+	      time_reset.setBounds(740, 310, 70, 20);
+	      background_pannel.add(time_reset);
+
 	      background_pannel.add(avg_wait_txt);
 	      background_pannel.add(avg_reponse_txt);
 	      background_pannel.add(avg_return_txt);
-	      
+	      background_pannel.add(time_quota_txt);
+
 	      background_pannel.add(avg_wait_label);
 	      background_pannel.add(avg_reponse_label);
 	      background_pannel.add(avg_return_label);
+	      background_pannel.add(time_quota_label);
 
 	      JPanel panel = new JPanel();
 	      panel.setForeground(SystemColor.inactiveCaption);
@@ -178,22 +188,41 @@ public class Gui_result extends JFrame {
 		  }
 			
 	      frame.add(background_pannel);
+	      
+	    //time save 버튼
+	      time_save.addActionListener(new ActionListener() {
 
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("시간할당량 저장");
+					
+					time = Integer.parseInt(time_quota_txt.getText());
+					time_quota_txt.setEnabled(false);
+				}
+	      });
+	      
+	    //time reset 버튼
+	      time_reset.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("시간할당량 초기화");
+					
+					time = 0;
+
+				    time_quota_txt.setText(null);
+					time_quota_txt.setEnabled(true);
+				}
+	      });
 	      //FCFS 버튼
 	      FCFS.addActionListener(new ActionListener() {
-	    	  	public void mouseEntered(MouseEvent e) {
-	    	  		FCFS.setCursor(new Cursor(Cursor.HAND_CURSOR));
-				}
-				public void mouseExited(MouseEvent e) {
-					FCFS.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-				}
+	  			StackedGanttChart demo = new StackedGanttChart(process_list.size());
 
 				public void actionPerformed(ActionEvent e) {
 					System.out.println("FCFS");
 					
 					scheduling.FCFS f = new FCFS();
-					f.insert(process_list);
-					
+					f.insert(process_list, demo);
+					demo.insert(0, process_list);
+
 					for(int i =0; i<process_list.size();i++) {
 						
 						System.out.println(process_list.get(i).getID()+"프로세스별 대기,응답,반환 "+process_list.get(i).getWait_time()+" "+process_list.get(i).getResponse_time()+" "+process_list.get(i).getReturn_time()+" ");
@@ -202,13 +231,175 @@ public class Gui_result extends JFrame {
 						table.setValueAt(Integer.toString(process_list.get(i).getReturn_time()), i, 6);
 					}
 					
-//					avg_wait_txt.setText();
-//				    avg_reponse_txt.setText(false);
-//				    avg_return_txt.setText
+					avg_wait_txt.setText(Double.toString(Math.round( f.get_avgWait() * 10000 )/10000.0  ));
+				    avg_reponse_txt.setText(Double.toString(Math.round( f.get_avgResponse() * 10000 )/10000.0 ));
+				    avg_return_txt.setText(Double.toString(Math.round( f.get_avgReturn()* 10000 )/10000.0));
 					
 				}
 	      });
 	      
+	    //SJF 버튼
+	      SJF.addActionListener(new ActionListener() {
+	  			StackedGanttChart demo = new StackedGanttChart(process_list.size());
+
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("SJF");
+					
+					scheduling.SJF f = new SJF();
+					f.insert(process_list, demo);
+					demo.insert(1, process_list);
+
+					for(int i =0; i<process_list.size();i++) {
+						
+						System.out.println(process_list.get(i).getID()+"프로세스별 대기,응답,반환 "+process_list.get(i).getWait_time()+" "+process_list.get(i).getResponse_time()+" "+process_list.get(i).getReturn_time()+" ");
+						table.setValueAt(Integer.toString(process_list.get(i).getWait_time()), i, 4);
+						table.setValueAt(Integer.toString(process_list.get(i).getResponse_time()), i, 5);
+						table.setValueAt(Integer.toString(process_list.get(i).getReturn_time()), i, 6);
+					}
+					
+					avg_wait_txt.setText(Double.toString(Math.round( f.get_avgWait() * 10000 )/10000.0  ));
+				    avg_reponse_txt.setText(Double.toString(Math.round( f.get_avgResponse() * 10000 )/10000.0 ));
+				    avg_return_txt.setText(Double.toString(Math.round( f.get_avgReturn()* 10000 )/10000.0));
+					
+				    
+				}
+	      });
+	      
+	      //HRN 버튼
+	      HRN.addActionListener(new ActionListener() {
+	  			StackedGanttChart demo = new StackedGanttChart(process_list.size());
+
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("HRN");
+					
+					scheduling.HRN f = new HRN();
+					f.insert(process_list, demo);
+					demo.insert(2, process_list);
+
+					for(int i =0; i<process_list.size();i++) {
+						
+						System.out.println(process_list.get(i).getID()+"프로세스별 대기,응답,반환 "+process_list.get(i).getWait_time()+" "+process_list.get(i).getResponse_time()+" "+process_list.get(i).getReturn_time()+" ");
+						table.setValueAt(Integer.toString(process_list.get(i).getWait_time()), i, 4);
+						table.setValueAt(Integer.toString(process_list.get(i).getResponse_time()), i, 5);
+						table.setValueAt(Integer.toString(process_list.get(i).getReturn_time()), i, 6);
+					}
+					
+					avg_wait_txt.setText(Double.toString(Math.round( f.get_avgWait() * 10000 )/10000.0  ));
+				    avg_reponse_txt.setText(Double.toString(Math.round( f.get_avgResponse() * 10000 )/10000.0 ));
+				    avg_return_txt.setText(Double.toString(Math.round( f.get_avgReturn()* 10000 )/10000.0));
+					
+				}
+	      });
+	      
+	    //RR 버튼
+	      RR.addActionListener(new ActionListener() {
+	  			StackedGanttChart demo = new StackedGanttChart(process_list.size());
+
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("RR");
+					
+					scheduling.RR f = new RR();
+					f.insert(process_list, time, demo);
+					demo.insert(3, process_list);
+
+					for(int i =0; i<process_list.size();i++) {
+						
+						System.out.println(process_list.get(i).getID()+"프로세스별 대기,응답,반환 "+process_list.get(i).getWait_time()+" "+process_list.get(i).getResponse_time()+" "+process_list.get(i).getReturn_time()+" ");
+						table.setValueAt(Integer.toString(process_list.get(i).getWait_time()), i, 4);
+						table.setValueAt(Integer.toString(process_list.get(i).getResponse_time()), i, 5);
+						table.setValueAt(Integer.toString(process_list.get(i).getReturn_time()), i, 6);
+					}
+					
+					avg_wait_txt.setText(Double.toString(Math.round( f.get_avgWait() * 10000 )/10000.0  ));
+				    avg_reponse_txt.setText(Double.toString(Math.round( f.get_avgResponse() * 10000 )/10000.0 ));
+				    avg_return_txt.setText(Double.toString(Math.round( f.get_avgReturn()* 10000 )/10000.0));
+					
+
+				}
+	      });
+	      
+	    //SRT 버튼
+	      SRT.addActionListener(new ActionListener() {
+	  			StackedGanttChart demo = new StackedGanttChart(process_list.size());
+
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("SRT");
+					
+					scheduling.SRT f = new SRT();
+					f.insert(process_list, time, demo);
+					demo.insert(4, process_list);
+
+					for(int i =0; i<process_list.size();i++) {
+						
+						System.out.println(process_list.get(i).getID()+"프로세스별 대기,응답,반환 "+process_list.get(i).getWait_time()+" "+process_list.get(i).getResponse_time()+" "+process_list.get(i).getReturn_time()+" ");
+						table.setValueAt(Integer.toString(process_list.get(i).getWait_time()), i, 4);
+						table.setValueAt(Integer.toString(process_list.get(i).getResponse_time()), i, 5);
+						table.setValueAt(Integer.toString(process_list.get(i).getReturn_time()), i, 6);
+					}
+					
+					avg_wait_txt.setText(Double.toString(Math.round( f.get_avgWait() * 10000 )/10000.0  ));
+				    avg_reponse_txt.setText(Double.toString(Math.round( f.get_avgResponse() * 10000 )/10000.0 ));
+				    avg_return_txt.setText(Double.toString(Math.round( f.get_avgReturn()* 10000 )/10000.0));
+					
+				  
+
+				}
+	      });
+	      
+	    //NoPrio 버튼
+	      NoPrio.addActionListener(new ActionListener() {
+	  			StackedGanttChart demo = new StackedGanttChart(process_list.size());
+
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("NoPrio");
+					
+					scheduling.NoPrio f = new NoPrio();
+					f.insert(process_list, demo);
+					demo.insert(5, process_list);
+
+					for(int i =0; i<process_list.size();i++) {
+						
+						System.out.println(process_list.get(i).getID()+"프로세스별 대기,응답,반환 "+process_list.get(i).getWait_time()+" "+process_list.get(i).getResponse_time()+" "+process_list.get(i).getReturn_time()+" ");
+						table.setValueAt(Integer.toString(process_list.get(i).getWait_time()), i, 4);
+						table.setValueAt(Integer.toString(process_list.get(i).getResponse_time()), i, 5);
+						table.setValueAt(Integer.toString(process_list.get(i).getReturn_time()), i, 6);
+					}
+					
+					avg_wait_txt.setText(Double.toString(Math.round( f.get_avgWait() * 10000 )/10000.0  ));
+				    avg_reponse_txt.setText(Double.toString(Math.round( f.get_avgResponse() * 10000 )/10000.0 ));
+				    avg_return_txt.setText(Double.toString(Math.round( f.get_avgReturn()* 10000 )/10000.0));
+					
+				
+				}
+	      });
+	      
+	    //PrPrio 버튼
+	      Prio.addActionListener(new ActionListener() {
+	  			StackedGanttChart demo = new StackedGanttChart(process_list.size());
+
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("PrPrio");
+					
+					scheduling.PrPrio f = new PrPrio();
+					f.insert(process_list, demo);
+					demo.insert(6, process_list);
+
+					for(int i =0; i<process_list.size();i++) {
+						
+						System.out.println(process_list.get(i).getID()+"프로세스별 대기,응답,반환 "+process_list.get(i).getWait_time()+" "+process_list.get(i).getResponse_time()+" "+process_list.get(i).getReturn_time()+" ");
+						table.setValueAt(Integer.toString(process_list.get(i).getWait_time()), i, 4);
+						table.setValueAt(Integer.toString(process_list.get(i).getResponse_time()), i, 5);
+						table.setValueAt(Integer.toString(process_list.get(i).getReturn_time()), i, 6);
+					}
+					
+					avg_wait_txt.setText(Double.toString(Math.round( f.get_avgWait() * 10000 )/10000.0  ));
+				    avg_reponse_txt.setText(Double.toString(Math.round( f.get_avgResponse() * 10000 )/10000.0 ));
+				    avg_return_txt.setText(Double.toString(Math.round( f.get_avgReturn()* 10000 )/10000.0));
+					
+				   
+
+				}
+	      });
 	      
 	      frame.setVisible(true);
 	      frame.setTitle("OS 스케줄링 입력창 ");
