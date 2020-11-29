@@ -109,6 +109,8 @@ public class HRN{
     	for(int i=1;i<readyQueue.size();i++) {
     		if(readyQueue.get(i).HRN_Priority<readyQueue.get(minSize).HRN_Priority)
     			minSize=i;
+    		else if(readyQueue.get(i).time_Remain==readyQueue.get(minSize).time_Remain)
+    			continue;
     	}
     	return minSize;
     }
