@@ -32,6 +32,8 @@ public class RR {
     	}
     	Queue.sort(Comparator.comparingInt(j -> j.Arrival_time));
     	//도착 시간 관점에서는 도착이 늦을수록 레디큐에 늦게 적재됨
+    	for(int i=0;i<Queue.size();i++)//고유번호 생성
+    		Queue.get(i).uID=i;
     	size=Queue.size();
     	QueueJob();//첫 시작에 cpu를 보는 게 아니라 큐의 상태를 보자
     }
