@@ -42,7 +42,7 @@ public class PrPrio {
         System.out.print(timeLapse+"s : "+job.ID + " is running [");
         for(int i=0; i<readyQueue.size();i++)
         	System.out.print(readyQueue.get(i).ID+" ");
-        System.out.println("]");
+        System.out.println("]" + newProcess);
     }
     
     void start(Process p, int index, StackedGanttChart demo) {//사실 이부분이 cpu가 작동되는 함수 부분.
@@ -98,6 +98,7 @@ public class PrPrio {
     			readyQueue.get(index).Response_time=timeLapse-readyQueue.get(index).Arrival_time;
     			//고러면 최초 응답시간을 만들어줘야죠
     			demo.createDatasetR_Ceady(timeLapse-readyQueue.get(index).Arrival_time, readyQueue.get(index).uID, 3);
+    			newProcess=false;
     		}
     		else demo.createDatasetR_Ceady(readyQueue.get(index).waiting, readyQueue.get(index).uID, 3);
     		start(readyQueue.get(index),index,demo);//start 함수는 인접한 레디큐 제어 함수에서만 관리하도록 한다.
