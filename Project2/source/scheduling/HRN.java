@@ -1,11 +1,9 @@
 package scheduling;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
 
 
 public class HRN{
@@ -47,12 +45,12 @@ public class HRN{
     }
     
     
-    void start(Process p, StackedGanttChart demo) {//사실 이부분이 cpu가 작동되는 함수 부분.
+    void start(Process p, int index, StackedGanttChart demo) {//사실 이부분이 cpu가 작동되는 함수 부분.
     	demo.createDatasetR_Ceady(timeLapse-p.Arrival_time, p.uID, 6);
     	p.waiting=0;
     	cpuCount=0;//대기 시간 체크+cpu 내 점유 시간 확인
     	cpuUse=true;//QueueJob 부분 코드 이제 안 씀(아마)
-    	readyQueue.remove(0);//cpu에서 사용하는 프로세스는 레디큐에서 삭제
+    	readyQueue.remove(index);//cpu에서 사용하는 프로세스는 레디큐에서 삭제
     	
         while(cpuCount!=p.Service_time) {//서비스 시간을 충족할 때까지 수행
         	log(p);
@@ -61,6 +59,7 @@ public class HRN{
     		ReadyQueueAdd();//대기큐의 대기시간 전부 1씩 증까
         	QueueJob(demo);
        	}
+        HRNCalculate();
         p.Return_time=timeLapse-p.Arrival_time;//각 프로세스 반환 시간 도출
     	avReturn+=(double)p.Return_time;//평균 반환 시간 도출을 위한 덧셈
     	avResponse+=(double)p.Response_time;//평균 응답 시간 도출을 위한 덧셈
@@ -70,8 +69,7 @@ public class HRN{
     			"/ 반환 시간: "+p.Return_time);
     	demo.createDatasetComplete(cpuCount, p.uID, 6);
     	cpuUse=false;
-       	
-       	ReadyQueueChange(demo);
+       	ReadyQueueChange(demo,GetPriIndex());
         	
     }
     
@@ -83,23 +81,18 @@ public class HRN{
     	}
     }
 
+    void HRNCalculate() {
+    	for(Process p : readyQueue)
+    		p.HRN_Priority = (p.waiting+p.Service_time)/(double)p.Service_time;
+    }
     //레디큐-cpu 사이 제어 함수
-    void ReadyQueueChange(StackedGanttChart demo) {
-    	
+    void ReadyQueueChange(StackedGanttChart demo, int index) {
     	//우선순위 정렬
-		for(Process a : readyQueue) {
-    		a.HRN_Priority = (a.waiting+a.Service_time)/a.Service_time;
-    	}
-		
-		readyQueue.sort(Comparator.comparingDouble(j -> j.HRN_Priority));
-		Collections.reverse(readyQueue);
-        
     	if(cpuUse==false&&readyQueue.size()!=0) {
-    		if(readyQueue.get(0).Response_time==-1)//해당 프로세스가 cpu에 처음 할당받는지
-
-    			readyQueue.get(0).Response_time=timeLapse-readyQueue.get(0).Arrival_time;
+    		if(readyQueue.get(index).Response_time==-1)//해당 프로세스가 cpu에 처음 할당받는지
+    			readyQueue.get(index).Response_time=timeLapse-readyQueue.get(index).Arrival_time;
     			//고러면 최초 응답시간을 만들어줘야죠
-    		start(readyQueue.get(0),demo);//start 함수는 인접한 레디큐 제어 함수에서만 관리하도록 한다.
+    		start(readyQueue.get(index),index,demo);//start 함수는 인접한 레디큐 제어 함수에서만 관리하도록 한다.
     	}
     	else
     		QueueJob(demo);
@@ -107,12 +100,12 @@ public class HRN{
     
     //가장 짧은 서비스시간을 가지는 프로세스의 인덱스를 찾아주는 함수
     int GetPriIndex() {
-    	int minSize=0;
+    	int maxSize=0;
     	for(int i=1;i<readyQueue.size();i++) {
-    		if(readyQueue.get(i).HRN_Priority<readyQueue.get(minSize).HRN_Priority)
-    			minSize=i;
+    		if(readyQueue.get(i).HRN_Priority>readyQueue.get(maxSize).HRN_Priority)
+    			maxSize=i;
     	}
-    	return minSize;
+    	return maxSize;
     }
     
     void QueueJob(StackedGanttChart demo) {//레디큐-준비큐 사이 제어 함수
@@ -126,7 +119,7 @@ public class HRN{
     		readyQueue.add(Queue.get(0));
     		demo.createDatasetReady(Queue.get(0).Arrival_time, Queue.get(0).uID, 6);
     		Queue.remove(0);
-    		ReadyQueueChange(demo);
+    		ReadyQueueChange(demo, GetPriIndex());
     	}
     	else if(cpuUse==false){//레디큐에 오는 충분한 시간이 지나지 않았고 cpu가 사용중이지 않을 때. 완전 처음에만 적용
     		System.out.println(timeLapse+"s : "+"Nothing runs");
@@ -137,13 +130,6 @@ public class HRN{
     	//cpu가 사용중인 상태에서 준비 큐에 접근하는 경우가 생길까? 생기면 여기에 코드 추가 바람
     }
     
-    void sleep(int msec) {
-        try {
-            TimeUnit.MILLISECONDS.sleep(msec);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
  public double get_avgResponse() {
 		
     	return avResponse/size;

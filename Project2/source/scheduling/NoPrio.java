@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
 
 //비선점 우선순위 처리
 public class NoPrio {
@@ -113,15 +112,6 @@ public class NoPrio {
         	QueueJob(demo);//레디큐에 처음 도착하는 프로세스가 있을 때까지 이를 반복
     	}
     	//cpu가 사용중인 상태에서 준비 큐에 접근하는 경우가 생길까? 생기면 여기에 코드 추가 바람
-    }
-   
- 
-    void sleep(int msec) {
-        try {
-            TimeUnit.MILLISECONDS.sleep(msec);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
     
  public double get_avgResponse() {

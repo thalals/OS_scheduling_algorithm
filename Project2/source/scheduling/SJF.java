@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
 
 //SJF처리 -> 비선점형 순차적 처리
 public class SJF {
@@ -117,14 +116,6 @@ public class SJF {
     	//cpu가 사용중인 상태에서 준비 큐에 접근하는 경우가 생길까? 생기면 여기에 코드 추가 바람
     }
    
- 
-    void sleep(int msec) {
-        try {
-            TimeUnit.MILLISECONDS.sleep(msec);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
  public double get_avgResponse() {
 		
     	return avResponse/size;
