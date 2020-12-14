@@ -89,8 +89,6 @@ public class NoPrio {
     	for(int i=1;i<readyQueue.size();i++) {
     		if(readyQueue.get(i).Priority_Number<readyQueue.get(minSize).Priority_Number)
     			minSize=i;
-    		else if(readyQueue.get(i).time_Remain==readyQueue.get(minSize).time_Remain)
-    			continue;
     	}
     	return minSize;
     }

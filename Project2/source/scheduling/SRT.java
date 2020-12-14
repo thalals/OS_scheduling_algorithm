@@ -51,7 +51,6 @@ public class SRT {
     	p.waiting=0;
     	cpuUse=true;//QueueJob 부분 코드 이제 안 씀(아마)
     	readyQueue.remove(index);//cpu에서 사용하는 프로세스는 레디큐에서 삭제
-        //runningThread.execute(() -> {//스레드를 실행하겠다.-주석처리.
         	while(cpuCount!=p.time_Remain) {//서비스 시간을 충족할 때까지 수행
         		if(cpuCount==timeslice) break;
         		log(p);
@@ -105,9 +104,6 @@ public class SRT {
     	for(int i=0;i<readyQueue.size();i++) {
     		if(readyQueue.get(i).time_Remain<readyQueue.get(minSize).time_Remain)
     			minSize=i;
-    		else if(readyQueue.get(i).time_Remain==readyQueue.get(minSize).time_Remain) {
-    			continue;
-    		}
     	}
     	return minSize;
     }

@@ -47,8 +47,6 @@ public class PrPrio {
     }
     
     void start(Process p, int index, StackedGanttChart demo) {//사실 이부분이 cpu가 작동되는 함수 부분.
-    	//if(timeLapse==p.Arrival_time)//cpu가 프로세스를 처음 받았을 때만
-    	//cpu에 다시 할당받았을 경우
     	p.waiting=0;
     	cpuCount=0;//대기 시간 체크+cpu 내 점유 시간 확인
     	cpuUse=true;//QueueJob 부분 코드 이제 안 씀(아마)
